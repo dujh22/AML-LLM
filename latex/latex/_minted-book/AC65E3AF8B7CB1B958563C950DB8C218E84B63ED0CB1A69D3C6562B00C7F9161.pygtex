@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{\PYGZbs{}section}\PYG{n+nb}{\PYGZob{}}一级标题名称\PYG{n+nb}{\PYGZcb{}}
+这里是第一章的内容
+\PYG{c}{\PYGZpc{} 空一行代表分段，百分号在LaTeX中代表注释}
+这里是第一章的内容
+\PYG{k}{\PYGZbs{}subsection}\PYG{n+nb}{\PYGZob{}}二级标题名称\PYG{n+nb}{\PYGZcb{}}
+这里是1.1的内容
+\end{Verbatim}

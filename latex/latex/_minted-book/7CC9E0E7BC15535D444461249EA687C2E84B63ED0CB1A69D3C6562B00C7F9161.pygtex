@@ -1,0 +1,14 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{\PYGZbs{}begin}\PYG{n+nb}{\PYGZob{}}table\PYG{n+nb}{\PYGZcb{}}
+\PYG{k}{\PYGZbs{}centering}
+\PYG{k}{\PYGZbs{}caption}\PYG{n+nb}{\PYGZob{}}表格排版实例\PYG{n+nb}{\PYGZcb{}}
+\PYG{k}{\PYGZbs{}label}\PYG{n+nb}{\PYGZob{}}tab1\PYG{n+nb}{\PYGZcb{}}
+\PYG{k}{\PYGZbs{}begin}\PYG{n+nb}{\PYGZob{}}tabular\PYG{n+nb}{\PYGZcb{}\PYGZob{}}|c|l|r|\PYG{n+nb}{\PYGZcb{}}
+\PYG{k}{\PYGZbs{}hline}
+AAA\PYG{n+nb}{\PYGZam{}}B\PYG{n+nb}{\PYGZam{}}CCC\PYG{k}{\PYGZbs{}\PYGZbs{}}
+\PYG{k}{\PYGZbs{}hline}
+A\PYG{n+nb}{\PYGZam{}}BBB\PYG{n+nb}{\PYGZam{}}C\PYG{k}{\PYGZbs{}\PYGZbs{}}
+\PYG{k}{\PYGZbs{}hline}
+\PYG{k}{\PYGZbs{}end}\PYG{n+nb}{\PYGZob{}}tabular\PYG{n+nb}{\PYGZcb{}}
+\PYG{k}{\PYGZbs{}end}\PYG{n+nb}{\PYGZob{}}table\PYG{n+nb}{\PYGZcb{}}
+\end{Verbatim}

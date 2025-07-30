@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{\PYGZbs{}begin}\PYG{n+nb}{\PYGZob{}}align\PYG{n+nb}{\PYGZcb{}}
+a \PYG{n+nb}{\PYGZam{}} = b + c \PYG{k}{\PYGZbs{}\PYGZbs{}}
+a \PYG{n+nb}{\PYGZam{}} = b + c \PYG{k}{\PYGZbs{}\PYGZbs{}}
+x + y \PYG{n+nb}{\PYGZam{}} = d + e \PYG{k}{\PYGZbs{}notag}
+\PYG{k}{\PYGZbs{}end}\PYG{n+nb}{\PYGZob{}}align\PYG{n+nb}{\PYGZcb{}}
+\end{Verbatim}

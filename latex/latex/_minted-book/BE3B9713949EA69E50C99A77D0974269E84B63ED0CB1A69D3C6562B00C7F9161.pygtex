@@ -1,0 +1,9 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{l+s+sb}{\PYGZbs{}[}
+\PYG{n+nv}{\PYGZbs{}mathbf}\PYG{n+nb}{\PYGZob{}R\PYGZcb{}}\PYG{o}{(}\PYG{n+nb}{x}\PYG{o}{)=}\PYG{n+nv}{\PYGZbs{}begin}\PYG{n+nb}{\PYGZob{}cases\PYGZcb{}}
+\PYG{n+nv}{\PYGZbs{}frac}\PYG{n+nb}{\PYGZob{}}\PYG{l+m}{1}\PYG{n+nb}{\PYGZcb{}\PYGZob{}p\PYGZcb{},\PYGZam{}x}\PYG{o}{=}\PYG{n+nv}{\PYGZbs{}frac}\PYG{n+nb}{\PYGZob{}q\PYGZcb{}\PYGZob{}p\PYGZcb{}}\PYG{o}{(}\PYG{n+nb}{p}\PYG{n+nv}{\PYGZbs{}in}\PYG{n+nb}{ }\PYG{n+nv}{\PYGZbs{}mathbf}\PYG{n+nb}{\PYGZob{}N\PYGZcb{}\PYGZca{}\PYGZob{}}\PYG{o}{+}\PYG{n+nb}{\PYGZcb{},q}\PYG{n+nv}{\PYGZbs{}in}\PYG{n+nb}{ }\PYG{n+nv}{\PYGZbs{}mathbf}\PYG{n+nb}{\PYGZob{}Z\PYGZcb{}}\PYG{o}{\PYGZhy{}}\PYG{n+nv}{\PYGZbs{}\PYGZob{}}\PYG{l+m}{0}\PYG{n+nv}{\PYGZbs{}\PYGZcb{}}\PYG{n+nb}{,p,q}\PYG{n+nv}{\PYGZbs{}text}\PYG{n+nb}{\PYGZob{}互质\PYGZcb{}}\PYG{o}{)}\PYG{n+nb}{,}\PYG{n+nv}{\PYGZbs{}\PYGZbs{}}
+\PYG{l+m}{1}\PYG{n+nb}{,\PYGZam{}x}\PYG{o}{=}\PYG{l+m}{0}\PYG{n+nb}{,}\PYG{n+nv}{\PYGZbs{}\PYGZbs{}}
+\PYG{l+m}{0}\PYG{n+nb}{,\PYGZam{}x}\PYG{n+nv}{\PYGZbs{}text}\PYG{n+nb}{\PYGZob{}为无理数\PYGZcb{}}
+\PYG{n+nv}{\PYGZbs{}end}\PYG{n+nb}{\PYGZob{}cases\PYGZcb{}}
+\PYG{l+s}{\PYGZbs{}]}
+\end{Verbatim}

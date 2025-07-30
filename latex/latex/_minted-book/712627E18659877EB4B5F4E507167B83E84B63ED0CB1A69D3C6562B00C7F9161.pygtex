@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{l+s+sb}{\PYGZbs{}[}
+\PYG{n+nv}{\PYGZbs{}mathbf}\PYG{n+nb}{\PYGZob{}X\PYGZcb{} }\PYG{o}{=}\PYG{n+nb}{ }\PYG{n+nv}{\PYGZbs{}left}\PYG{o}{(}
+\PYG{n+nv}{\PYGZbs{}begin}\PYG{n+nb}{\PYGZob{}array\PYGZcb{}\PYGZob{}cccc\PYGZcb{}}
+\PYG{n+nb}{x\PYGZus{}\PYGZob{}}\PYG{l+m}{11}\PYG{n+nb}{\PYGZcb{} \PYGZam{} x\PYGZus{}\PYGZob{}}\PYG{l+m}{12}\PYG{n+nb}{\PYGZcb{} \PYGZam{} }\PYG{n+nv}{\PYGZbs{}ldots}\PYG{n+nb}{ \PYGZam{} x\PYGZus{}\PYGZob{}}\PYG{l+m}{1}\PYG{n+nb}{n\PYGZcb{}}\PYG{n+nv}{\PYGZbs{}\PYGZbs{}}
+\PYG{n+nb}{x\PYGZus{}\PYGZob{}}\PYG{l+m}{21}\PYG{n+nb}{\PYGZcb{} \PYGZam{} x\PYGZus{}\PYGZob{}}\PYG{l+m}{22}\PYG{n+nb}{\PYGZcb{} \PYGZam{} }\PYG{n+nv}{\PYGZbs{}ldots}\PYG{n+nb}{ \PYGZam{} x\PYGZus{}\PYGZob{}}\PYG{l+m}{2}\PYG{n+nb}{n\PYGZcb{}}\PYG{n+nv}{\PYGZbs{}\PYGZbs{}}
+\PYG{n+nv}{\PYGZbs{}vdots}\PYG{n+nb}{ \PYGZam{} }\PYG{n+nv}{\PYGZbs{}vdots}\PYG{n+nb}{ \PYGZam{} }\PYG{n+nv}{\PYGZbs{}ddots}\PYG{n+nb}{ \PYGZam{} }\PYG{n+nv}{\PYGZbs{}vdots\PYGZbs{}\PYGZbs{}}
+\PYG{n+nb}{x\PYGZus{}\PYGZob{}n}\PYG{l+m}{1}\PYG{n+nb}{\PYGZcb{} \PYGZam{} x\PYGZus{}\PYGZob{}n}\PYG{l+m}{2}\PYG{n+nb}{\PYGZcb{} \PYGZam{} }\PYG{n+nv}{\PYGZbs{}ldots}\PYG{n+nb}{ \PYGZam{} x\PYGZus{}\PYGZob{}nn\PYGZcb{}}\PYG{n+nv}{\PYGZbs{}\PYGZbs{}}
+\PYG{n+nv}{\PYGZbs{}end}\PYG{n+nb}{\PYGZob{}array\PYGZcb{} }\PYG{n+nv}{\PYGZbs{}right}\PYG{o}{)}
+\PYG{l+s}{\PYGZbs{}]}
+\end{Verbatim}

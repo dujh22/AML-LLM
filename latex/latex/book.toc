@@ -1,0 +1,152 @@
+\gdef \the@ipfilectr {@-1}
+\gdef \the@ipfilectr {}
+\gdef \the@ipfilectr {@-2}
+\gdef \the@ipfilectr {}
+\gdef \the@ipfilectr {@-3}
+\contentsline {chapter}{\numberline {第一章\hspace {.3em}}整体认知}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}引言}{1}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}从Transformer到BERT：数据规模与预训练范式的突破}{2}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}从BERT到GPT-1~2：数据利用率的跨越式提升}{2}{subsection.1.1.2}%
+\contentsline {subsection}{\numberline {1.1.3}从GPT-2到ChatGPT：数据对齐与“人类反馈”的融合}{3}{subsection.1.1.3}%
+\contentsline {subsection}{\numberline {1.1.4}总结：数据scale的核心逻辑}{3}{subsection.1.1.4}%
+\contentsline {section}{\numberline {1.2}GLM VS GPT}{4}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}模型技术架构与特点}{9}{subsection.1.2.1}%
+\contentsline {subsubsection}{通用语言模型（GLM）}{10}{subsubsection*.3}%
+\contentsline {subsubsection}{国际影响力}{10}{subsubsection*.4}%
+\contentsline {subsubsection}{多模态模型（Cog 系列）}{11}{subsubsection*.5}%
+\contentsline {subsection}{\numberline {1.2.2}模型能力表现}{11}{subsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.2.3}开源项目}{12}{subsection.1.2.3}%
+\contentsline {subsubsection}{模型开源情况}{12}{subsubsection*.6}%
+\contentsline {subsubsection}{项目排名}{12}{subsubsection*.7}%
+\contentsline {section}{\numberline {1.3}大模型的AGI之路}{13}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}人工智能分级}{13}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}教会大模型使用工具}{13}{subsection.1.3.2}%
+\contentsline {subsubsection}{1. GLM-4：纯语言大模型}{14}{subsubsection*.8}%
+\contentsline {subsubsection}{2. GLM-4V：多模态大模型}{14}{subsubsection*.9}%
+\contentsline {subsubsection}{3. GLM-4V-All Tools：具备工具使用能力的多模态模型}{14}{subsubsection*.10}%
+\contentsline {subsubsection}{总结：演进逻辑与价值}{14}{subsubsection*.11}%
+\contentsline {subsection}{\numberline {1.3.3}未来通用人工智能AGI之路在哪里？}{15}{subsection.1.3.3}%
+\contentsline {subsection}{\numberline {1.3.4}AGI应用栈}{15}{subsection.1.3.4}%
+\contentsline {subsection}{\numberline {1.3.5}搜索的革命}{16}{subsection.1.3.5}%
+\contentsline {subsection}{\numberline {1.3.6}计算的革命}{18}{subsection.1.3.6}%
+\contentsline {subsection}{\numberline {1.3.7}2024-AGI元年？}{18}{subsection.1.3.7}%
+\contentsline {section}{\numberline {1.4}致谢}{19}{section.1.4}%
+\gdef \the@ipfilectr {}
+\gdef \the@ipfilectr {@-4}
+\contentsline {chapter}{\numberline {第二章\hspace {.3em}}深度学习基础}{22}{chapter.2}%
+\contentsline {subsection}{\numberline {2.0.1}\textbf {2.1 引言*}*（删？）**}{22}{subsection.2.0.1}%
+\contentsline {subsubsection}{\textbf {2.1.1 人工智能}}{22}{subsubsection*.13}%
+\contentsline {subsubsection}{\textbf {2.1.2 人工智能的发展历史}}{23}{subsubsection*.14}%
+\contentsline {subsubsection}{\textbf {2.1.3 GPT与GLM}}{23}{subsubsection*.15}%
+\contentsline {subsubsection}{\textbf {2.1.4 大模型的架构}}{24}{subsubsection*.16}%
+\contentsline {subsubsection}{\textbf {2.1.5 机器学习概览}}{24}{subsubsection*.17}%
+\contentsline {paragraph}{\textbf {2.1.5.1 序列标注}}{25}{paragraph*.18}%
+\contentsline {subsection}{\numberline {2.0.2}\textbf {2.1 深度学习概览}}{25}{subsection.2.0.2}%
+\contentsline {subsubsection}{\textbf {2.1.1 ``深度学习''为什么叫``深度学习''}}{26}{subsubsection*.19}%
+\contentsline {subsubsection}{\textbf {2.1.2 发展历史}}{26}{subsubsection*.20}%
+\contentsline {subsubsection}{\textbf {2.1.3 基本网络架构}}{27}{subsubsection*.21}%
+\contentsline {subsection}{\numberline {2.0.3}\textbf {2.2 深度前馈网络}}{28}{subsection.2.0.3}%
+\contentsline {subsubsection}{\textbf {2.2.1 整体概览}}{28}{subsubsection*.22}%
+\contentsline {subsubsection}{\textbf {2.2.2 从感知器到神经网络}}{28}{subsubsection*.23}%
+\contentsline {subsubsection}{\textbf {2.2.3 单层感知器}}{29}{subsubsection*.24}%
+\contentsline {subsubsection}{\textbf {2.2.4 Softmax输出单元}}{30}{subsubsection*.25}%
+\contentsline {subsubsection}{\textbf {2.2.5} \textbf {深度前馈网络}}{30}{subsubsection*.26}%
+\contentsline {paragraph}{\textbf {2.2.5.1 形式化计算}}{30}{paragraph*.27}%
+\contentsline {subsubsection}{\textbf {2.2.6} \textbf {示例：学习异或（XOR）}}{31}{subsubsection*.28}%
+\contentsline {paragraph}{\textbf {2.2.6.1} \textbf {扩展线性模型}}{31}{paragraph*.29}%
+\contentsline {paragraph}{\textbf {2.2.6.2 线性模型不适用}}{32}{paragraph*.30}%
+\contentsline {paragraph}{\textbf {2.2.6.3 前馈网络解决XOR问题}}{33}{paragraph*.31}%
+\contentsline {subsubsection}{\textbf {2.2.7 损失函数}}{35}{subsubsection*.32}%
+\contentsline {paragraph}{\textbf {2.2.7.1 训练损失}}{36}{paragraph*.33}%
+\contentsline {paragraph}{\textbf {2.2.7.2 验证损失}}{36}{paragraph*.34}%
+\contentsline {paragraph}{\textbf {2.2.7.3} \textbf {正则项}}{36}{paragraph*.35}%
+\contentsline {paragraph}{\textbf {2.2.7.4 损失函数类型}}{36}{paragraph*.36}%
+\contentsline {subsubsection}{\textbf {2.2.8 反向传播算法}}{37}{subsubsection*.37}%
+\contentsline {paragraph}{\textbf {2.2.8.1 模型学习}}{37}{paragraph*.38}%
+\contentsline {paragraph}{\textbf {2.2.8.2} \textbf {反向传播}}{37}{paragraph*.39}%
+\contentsline {paragraph}{\textbf {2.2.8.2.1 训练}}{37}{paragraph*.40}%
+\contentsline {paragraph}{\textbf {2.2.8.2.2 直观理解}}{38}{paragraph*.41}%
+\contentsline {paragraph}{\textbf {2.2.8.3} \textbf {前向传播}}{38}{paragraph*.42}%
+\contentsline {paragraph}{\textbf {2.2.8.4} \textbf {输出层的误差}}{39}{paragraph*.43}%
+\contentsline {paragraph}{ }{39}{paragraph*.44}%
+\contentsline {paragraph}{\textbf {2.2.8.5} \textbf {误差的反向传播}}{39}{paragraph*.45}%
+\contentsline {paragraph}{\textbf {2.2.8.6} \textbf {求导}}{40}{paragraph*.46}%
+\contentsline {paragraph}{\textbf {2.2.8.7} \textbf {总结（伪代码）}}{41}{paragraph*.47}%
+\contentsline {paragraph}{\textbf {2.2.8.8} \textbf {问题：反向传播的常见局限性是什么？}}{42}{paragraph*.48}%
+\contentsline {subsubsection}{\textbf {2.2.9 激活函数}}{42}{subsubsection*.49}%
+\contentsline {paragraph}{\textbf {2.2.9.1} \textbf {为什么我们需要激活函数？}}{42}{paragraph*.50}%
+\contentsline {paragraph}{\textbf {2.2.9.2} \textbf {激活函数}}{42}{paragraph*.51}%
+\contentsline {subparagraph}{\textbf {2.2.9.2.1} \textbf {逻辑 Sigmoid 函数}}{43}{subparagraph*.52}%
+\contentsline {subparagraph}{\textbf {2.2.9.2.2} \textbf {双曲正切函数}}{43}{subparagraph*.53}%
+\contentsline {subparagraph}{\textbf {2.2.9.2.3} \textbf {修正线性单元ReLU}}{43}{subparagraph*.54}%
+\contentsline {subparagraph}{\textbf {2.2.9.2.4} \textbf {广义修正线性单元}}{43}{subparagraph*.55}%
+\contentsline {subparagraph}{\textbf {2.2.9.2.5} \textbf {门控线性单元 (GLU)}}{43}{subparagraph*.56}%
+\contentsline {subparagraph}{\textbf {2.2.9.2.6} \textbf {Maxout 单元}}{44}{subparagraph*.57}%
+\contentsline {paragraph}{\textbf {2.2.9.3 问题: DNN 和 逻辑回归 之间的关系是什么？}}{44}{paragraph*.58}%
+\contentsline {paragraph}{\textbf {2.2.9.4 架构考虑}}{44}{paragraph*.59}%
+\contentsline {paragraph}{\textbf {2.2.9.5} \textbf {训练不稳定性}}{44}{paragraph*.60}%
+\contentsline {paragraph}{\textbf {2.2.9.6} \textbf {稳定的隐藏状态：归一化}}{45}{paragraph*.61}%
+\contentsline {subsubsection}{\textbf {2.2.10} \textbf {高级架构}}{45}{subsubsection*.62}%
+\contentsline {paragraph}{\textbf {2.2.10.1*}*当今的神经网络结构**}{45}{paragraph*.63}%
+\contentsline {subsubsection}{\textbf {2.2.11 总结}}{46}{subsubsection*.64}%
+\contentsline {subsection}{\numberline {2.0.4}\textbf {2.3 卷积神经网络}}{47}{subsection.2.0.4}%
+\contentsline {subsubsection}{\textbf {2.3.1} \textbf {机器如何识别我们的面孔？}}{47}{subsubsection*.65}%
+\contentsline {subsubsection}{\textbf {2.3.2} \textbf {计算机视觉任务}}{47}{subsubsection*.66}%
+\contentsline {paragraph}{\textbf {2.3.2.1 用于视觉的 MLP？}}{47}{paragraph*.67}%
+\contentsline {paragraph}{\textbf {2.3.2.2 目标检测}}{47}{paragraph*.68}%
+\contentsline {paragraph}{\textbf {2.3.2.3 2D 卷积}}{47}{paragraph*.69}%
+\contentsline {subsubsection}{\textbf {2.3.3} \textbf {大脑神经科学}}{47}{subsubsection*.70}%
+\contentsline {subsubsection}{\textbf {2.3.4} \textbf {概述}}{48}{subsubsection*.71}%
+\contentsline {paragraph}{ }{48}{paragraph*.72}%
+\contentsline {paragraph}{\textbf {2.3.4.1} \textbf {想法1：局部连接}}{48}{paragraph*.73}%
+\contentsline {paragraph}{\textbf {2.3.4.2} \textbf {想法2：参数共享}}{48}{paragraph*.74}%
+\contentsline {paragraph}{\textbf {2.3.4.3} \textbf {什么是卷积？}}{48}{paragraph*.75}%
+\contentsline {subparagraph}{\textbf {2.3.4.3.1 步幅（Stride）}}{49}{subparagraph*.76}%
+\contentsline {subparagraph}{\textbf {2.3.4.3.2 填充（Padding）}}{49}{subparagraph*.77}%
+\contentsline {subparagraph}{\textbf {2.3.4.3.3 膨胀卷积}}{50}{subparagraph*.78}%
+\contentsline {subparagraph}{\textbf {2.3.4.3.4} \textbf {卷积：公式}}{50}{subparagraph*.79}%
+\contentsline {paragraph}{\textbf {2.3.4.4 池化}}{50}{paragraph*.80}%
+\contentsline {paragraph}{\textbf {2.3.4.5} \textbf {全连接层}}{52}{paragraph*.81}%
+\contentsline {paragraph}{\textbf {2.3.4.6 CNN的特征提取}}{52}{paragraph*.82}%
+\contentsline {paragraph}{\textbf {2.3.4.7 AlexNet}}{53}{paragraph*.83}%
+\contentsline {paragraph}{\textbf {2.3.4.8 ResNet}}{53}{paragraph*.84}%
+\contentsline {subparagraph}{\textbf {2.3.4.8.1} \textbf {残差神经网络}}{53}{subparagraph*.85}%
+\contentsline {paragraph}{\textbf {2.3.4.9 U-Net}}{53}{paragraph*.86}%
+\contentsline {paragraph}{\textbf {2.3.4.10} \textbf {DenseNet}}{54}{paragraph*.87}%
+\contentsline {paragraph}{\textbf {2.3.4.11 T*}*emporal convolutional network (TCN)**}{54}{paragraph*.88}%
+\contentsline {subsection}{\numberline {2.0.5}\textbf {2.4} \textbf {序列建模：循环神经网络和递归神经网络}}{55}{subsection.2.0.5}%
+\contentsline {subsubsection}{\textbf {2.4.1} \textbf {引言}}{55}{subsubsection*.89}%
+\contentsline {paragraph}{\textbf {2.4.1.1 循环神经网络提供了很大的灵活性}}{56}{paragraph*.90}%
+\contentsline {paragraph}{\textbf {2.4.1.2 历史}}{56}{paragraph*.91}%
+\contentsline {paragraph}{\textbf {2.4.1.3 循环神经网络实例}}{57}{paragraph*.92}%
+\contentsline {paragraph}{\textbf {2.4.1.4 循环神经网络类型}}{58}{paragraph*.93}%
+\contentsline {subparagraph}{\textbf {2.4.1.4.1 输出循环}}{58}{subparagraph*.94}%
+\contentsline {subparagraph}{\textbf {2.4.1.4.2 关于输出循环的讨论}}{59}{subparagraph*.95}%
+\contentsline {paragraph}{\textbf {2.4.1.5 循环神经网络中的梯度计算}}{59}{paragraph*.96}%
+\contentsline {paragraph}{\textbf {2.4.1.6 循环神经网络作为有向图模型}}{60}{paragraph*.97}%
+\contentsline {paragraph}{\textbf {2.4.1.7} \textbf {用循环神经网络对序列进行建模}}{60}{paragraph*.98}%
+\contentsline {subsubsection}{\textbf {2.4.2 双向RNN}}{60}{subsubsection*.99}%
+\contentsline {paragraph}{\textbf {2.4.2.1 双向循环神经网络}}{60}{paragraph*.100}%
+\contentsline {paragraph}{\textbf {2.4.2.2} \textbf {深层双向循环神经网络（Deep Bidirectional RNN）}}{61}{paragraph*.101}%
+\contentsline {subsubsection}{\textbf {2.4.3 编码器-解码器 架构}}{62}{subsubsection*.102}%
+\contentsline {paragraph}{\textbf {2.4.3.1} \textbf {编码器-解码器序列到序列架构}}{62}{paragraph*.103}%
+\contentsline {paragraph}{ }{62}{paragraph*.104}%
+\contentsline {paragraph}{\textbf {2.4.3.2} \textbf {编码器-解码器架构与注意力机制}}{62}{paragraph*.105}%
+\contentsline {paragraph}{\textbf {2.4.3.3} \textbf {注意力机制}}{63}{paragraph*.106}%
+\contentsline {paragraph}{\textbf {2.4.3.4} \textbf {带有序列到序列架构的注意力机制}}{64}{paragraph*.107}%
+\contentsline {subsubsection}{\textbf {2.4.4 长期依赖}}{64}{subsubsection*.108}%
+\contentsline {paragraph}{\textbf {2.4.4.1} \textbf {让我们回顾一下梯度消失和梯度爆炸问题}}{64}{paragraph*.109}%
+\contentsline {subparagraph}{\textbf {2.4.4.1.1 纯线性情况}}{64}{subparagraph*.110}%
+\contentsline {subparagraph}{\textbf {2.4.4.1.2} \textbf {非线性情况}}{65}{subparagraph*.111}%
+\contentsline {paragraph}{\textbf {2.4.4.2} \textbf {处理梯度爆炸的技巧：梯度剪裁}}{66}{paragraph*.112}%
+\contentsline {paragraph}{\textbf {2.4.4.3} \textbf {处理梯度消失问题的方法：权重初始化与ReLU激活函数}}{66}{paragraph*.113}%
+\contentsline {paragraph}{\textbf {2.4.4.4} \textbf {门控递归神经网络 (RNNs) 与长短期记忆 (LSTM)}}{67}{paragraph*.114}%
+\contentsline {subparagraph}{\textbf {2.4.4.4.1} \textbf {长短期记忆网络 (LSTM)}}{67}{subparagraph*.115}%
+\contentsline {subparagraph}{\textbf {2.4.4.4.2} \textbf {门控循环单元 (GRU, 2014)}}{69}{subparagraph*.116}%
+\contentsline {subparagraph}{\textbf {2.4.4.4.3} \textbf {LSTM vs GRU}}{70}{subparagraph*.117}%
+\contentsline {subsubsection}{\textbf {2.4.5 总结}}{70}{subsubsection*.118}%
+\contentsline {subsection}{\numberline {2.0.6}\textbf {2.5 总结}}{71}{subsection.2.0.6}%
+\contentsline {subsubsection}{\textbf {2.5.1 数据总结}}{71}{subsubsection*.119}%
+\contentsline {subsubsection}{\textbf {2.5.2 选择指南}}{72}{subsubsection*.120}%
+\contentsline {section}{\numberline {2.1}\textbf {参考文献}}{72}{section.2.1}%
+\gdef \the@ipfilectr {}

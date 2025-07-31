@@ -1,0 +1,3794 @@
+\chapter{深度学习基础}
+
+【摘要】本章介绍了深度前馈网络（Deep Feedforward Network）、损失函数、反向传播算法（Backpropagation Algorithm）、激活函数以及常见的模型架构。讨论了卷积神经网络（CNN）的卷积操作、池化操作，不同的CNN模型架构及其在二维（2D）和三维（3D）上的应用。此外，还介绍了循环神经网络（RNN）的基础结构、双向RNN、编码器-解码器架构、长期依赖（long-term dependencies）以及长短期记忆网络（LSTM）和门控循环单元（GRU）等高级模型。
+
+\emph{\textbf{*2. 深度学习基础*}}
+
+本章介绍了深度前馈网络（Deep Feedforward
+Network）、损失函数、反向传播算法（Backpropagation
+Algorithm）、激活函数以及常见的模型架构。讨论了卷积神经网络（CNN）的卷积操作、池化操作，不同的CNN模型架构及其在二维（2D）和三维（3D）上的应用。此外，还介绍了循环神经网络（RNN）的基础结构、双向RNN、编码器-解码器架构、长期依赖（long-term
+dependencies）以及长短期记忆网络（LSTM）和门控循环单元（GRU）等高级模型。
+
+2024版本：唐杰、杜晋华、杨超群、吴彦辰
+
+\subsection{\texorpdfstring{\textbf{2.1
+引言*}*（删？）**}{2.1 引言**（删？）**}}\label{21-ux5f15ux8a00ux5220}
+
+\subsubsection{\texorpdfstring{\textbf{2.1.1
+人工智能}}{2.1.1 人工智能}}\label{211-ux4ebaux5de5ux667aux80fd}
+
+人工智能（AI）的架构和运作方式：首先，从最底层的``环境''（Environment）开始，这个环境包括了AI所处的所有外部条件和变化。它相当于现实世界中的输入信息，这些信息通过各种传感器（Sensing）采集，进入AI系统。
+
+接下来，感知是AI系统接收环境信息的第一步，类似于人类的五感。通过感知，AI能够接收到大量来自环境的原始数据，例如视觉、声音、温度等。
+
+获取到环境的感知数据后，信息传递到``思维''（Thinking）模块。这部分相当于AI的``大脑''，负责数据处理和决策。思维过程包括了模式识别、预测分析以及复杂的逻辑判断等等。它是AI能否做出智能决策的核心所在。
+
+有了处理后的决策信息，AI会将这些信息传递给``行动''（Acting）模块。行动模块是系统执行各种任务的部分，类似于我们的人体动作。根据从思维模块中的决策，AI在实际环境中执行具体的操作，例如移动一只机械手臂或者回复一个文本消息。
+
+高级一些的AI系统可能还会引入``情感和动机''（Emotion,
+motivation）模块，这就像是人类的心智。虽然这些因素现在还在研究开发中，但赋予AI系统以情感和动机能够使之更好地理解和响应人类需求，从而提供更加人性化的服务。
+
+值得注意的是，这些模块之间是相互联系和循环的。行动后的结果会再次影响到环境，产生新的感知信息，从而再次进入这个循环。这种方式确保了AI能够不断调整和优化自身的行为和决策。
+
+总结来说，人工智能通过``感知''、``思维''及``行动''三个基本环节的循环往复，不断地与环境互动，逐步实现了对复杂问题的解决能力，甚至可能达成人类智能级别的认知和反应水平。
+
+\subsubsection{\texorpdfstring{\textbf{2.1.2
+人工智能的发展历史}}{2.1.2 人工智能的发展历史}}\label{212-ux4ebaux5de5ux667aux80fdux7684ux53d1ux5c55ux5386ux53f2}
+
+第一代，时间范围大约在1950年代末到1980年代初。标志性事件之一是1956年，这一年通常被认为是``人工智能这一术语首次被提出的时间。这段时间的主要技术是符号AI（Symbolic
+AI），这种技术利用符号和逻辑规则来模拟人的推理过程。
+
+第二代的时间范围大约在1980年代到2010年代初。这个时期标志性事件之一是1980年代的专家系统（Expert
+System）出现，专家系统利用知识库和推理机制来解决特定领域的问题。此外，1980年清华开始了AI方向的研究。在1990年左右，专家系统处于活跃的发展期。这段时间的主要技术是专家系统，通过使用规则和知识库来解析特定领域的问题。
+
+第三代从2010年代初至今。在这个时期的重要标志性事件之一是2011年的深度学习（Deep
+Learning）的迅速发展，深度学习利用多层神经网络极大提高了图像和语言等复杂任务的处理能力。到了2020年代中期到2030年，大规模语言模型（Large
+Language Models,
+LLM）继续发展，标志着AI在自然语言处理和更加复杂任务中的应用进一步提升。这个时期的主要技术包括深度学习和大规模语言模型，在大数据和强大计算能力的支撑下，AI能够处理更加复杂和精确的任务。
+
+其实，AI历史上存在几次``冬天''和复苏期。每次低谷期之后，随着新理论和技术的突破，AI领域都会迎来新的高峰。例如，符号AI在20世纪80年代初期出现了低谷，但随着专家系统的出现，AI在90年代迎来了新一轮发展。进入21世纪以后，深度学习和大规模语言模型的出现再度推动了AI的快速发展。
+
+\subsubsection{\texorpdfstring{\textbf{2.1.3
+GPT与GLM}}{2.1.3 GPT与GLM}}\label{213-gptux4e0eglm}
+
+在探讨现代人工智能语言模型的发展时，我们可以通过比较两种具有代表性的语言模型家族------GPT（Generative
+Pre-trained Transformer）和GLM（General Language
+Model）来深入了解它们各自的功能和典型应用。
+
+基于GPT技术的应用：GPT家族基于生成预训练Transformer技术，涵盖了一系列应用，这些模型在自然语言处理和生成方面显示出了强大的能力：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  ChatGPT：一个用于对话生成的模型，能够处理和生成自然语言对话。
+\item
+  DALL.E：一个图像生成模型，能够根据文本描述生成逼真的图像。
+\item
+  Codex：一个用于代码生成的模型，能够从自然语言描述生成代码，支持多种编程语言。
+\item
+  GPT-4V：一个多模态模型，可以处理包括文本、图像等多种形式的数据。
+\item
+  Sora：文生视频模型。
+\item
+  GPT-4o：具备更强的推理能力。
+\end{enumerate}
+
+基于GLM技术的应用：GLM技术也拥有其独特的模型家族，适用于多种生成任务，这些模型强调通用性和多模态处理能力：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  ChatGLM：一个对话生成模型，设计用于自然语言对话的处理和生成。
+\item
+  CogView：一个用于生成图像的模型，通过文本描述生成高质量的图像。
+\item
+  CodeGeeX：一个代码生成模型，能够根据自然语言编写代码，支持广泛的编程任务。
+\item
+  GLM-4V：一个多模态模型，能够处理和生成包括文本、图像在内的多种数据形式。
+\item
+  CogVideoX：一个视频生成模型，通过文本描述生成视频内容，开拓了新的生成领域。
+\item
+  GLM-4-plus：一个更为先进的多模态模型，不仅处理文本和图像，还扩展到音频数据的生成和处理。
+\end{enumerate}
+
+这两种模型家族在功能上存在许多相似之处，包括自然语言对话生成、图像和视频生成、代码生成以及多模态数据的处理。然而，它们在技术实现、性能表现、应用领域和独特功能上存在一定差异。
+
+\subsubsection{\texorpdfstring{\textbf{2.1.4
+大模型的架构}}{2.1.4 大模型的架构}}\label{214-ux5927ux6a21ux578bux7684ux67b6ux6784}
+
+大规模语言模型的架构及其演变方，涵盖了三种主要的模型类型：RNN风格的Transformer、传统Transformer和状态空间模型。
+
+传统Transformer是当前许多大规模语言模型的核心架构，以其强大的并行处理能力和高效的注意力机制广泛应用。其中的例子有GPT、Llama、GLM、BERT和T5，这些是现已有的代表性模型。2023年的Griffin和2024年的Megalodon在局部注意力机制上有所改进，以提升性能和效率。另有在2024年推出的Lory和DeepSeek-v2，这些模型增强了子模块优化和专家混合的使用。
+
+其中一个改进分支是：RNN风格Transformer，这些模型结合了循环神经网络和Transformer的元素，以提高计算效率和模型性能。具体例子有2023年的RWKV和RetNet，它们集中在注意力机制的改进上。2024年推出的xLSTM是一种不依赖于传统注意力机制的模型。另一款模型是YoCo，它进一步优化了线性和自由形式的注意力机制。
+
+状态空间模型侧重于利用信号处理技术和状态空间表示，以增强序列建模能力。现有的例子包括在2023年之前存在的S4和H3，这些展示了状态空间模型技术的早期应用。2023年的Mamba是当前最新的状态空间模型。在2024年推出的Jamba是这种技术最新的发展。
+
+\subsubsection{\texorpdfstring{\textbf{2.1.5
+机器学习概览}}{2.1.5 机器学习概览}}\label{215-ux673aux5668ux5b66ux4e60ux6982ux89c8}
+
+机器学习任务分为四类：1.分类（Classification）2.回归（Regression）3.聚类（Clustering）4.降维（Dimensionality
+Reduction）每种任务类型都有不同的算法。
+
+分类（Classification）：分类任务旨在预测数据属于哪一类。如果你有文本数据，使用Naive
+Bayes。如果样本数量少于100K，尝试Linear SVC ，如果不工作，使用其他算法
+（SVC, Ensemble Classifiers, SGD Classifier等）。如果有内核近似（Kernel
+Approximation）则优先选择相应的分类器。
+
+回归（Regression）：回归任务旨在预测数值。如果特征重要，尝试Ridge
+Regression 或SVR （支撑向量回归）。如果样本数量少于100K，尝试SGD
+Regressor 。如果你样本超过50，若不工作，则获取更多数据。
+
+聚类（Clustering）：聚类任务旨在对未标记数据进行分组。若样本数量少于10K，尝试MiniBatch
+KMeans 或KMeans 。若类别数已知，使用MiniBatch KMeans 或MeanShift
+。若大于10K样本，并且不工作，使用其他算法 。
+
+降维（Dimensionality
+Reduction）：降维任务用于简化数据以减少计算负载。若样本少于10K，尝试Randomized
+PCA 。若需要内核近似，选择相应算法 （如Isomap或Spectral
+Embedding）。否则尝试更多其他特定降维算法。
+
+\paragraph{\texorpdfstring{\textbf{2.1.5.1
+序列标注}}{2.1.5.1 序列标注}}\label{2151-ux5e8fux5217ux6807ux6ce8}
+
+在自然语言处理领域中，序列标注是一项重要的任务，常见的算法包括支持向量机（SVM）、隐马尔可夫模型（HMM）、最大熵（ME）、最大熵马尔科夫模型（MEMM）以及条件随机场（CRF）。以下是这些算法的优缺点解析。
+
+支持向量机（SVM）是一种强大的分类算法，充分利用多种特征进行线性可分的二分类。其主要优点是分类能力强，但计算复杂度高，这是它的一个明显缺点。
+
+隐马尔可夫模型（HMM）常用于处理具有隐含状态的序列数据。HMM的优点在于它的方法有效且常用，但存在特征选择受限，不能应用较长上下文文本特征的问题。
+
+最大熵（ME）是一种灵活的无偏算法，解决了隐马尔可夫模型在处理上下文特征时的局限性。然而，其计算复杂度仍然较高，这使得最大的缺点在于运算量大，适用广泛性有所限制。
+
+最大熵马尔科夫模型（MEMM）进一步解决了最大熵的计算复杂度问题。尽管MEMM能够有效地处理复杂特征，但其标注偏置问题依然存在，这成为了该算法的主要缺点。
+
+条件随机场（CRF）算法在序列标注中显示出优越的表现，解决了MEMM标注偏置的问题。CRF能够高效地进行训练并适应复杂的特征工程，但其训练过程难度较高，这是它的主要不足之处。
+
+总结来说，不同的算法在序列标注任务中有其独特的应用场景和优势。支持向量机通过线性分类方法解决简单的标注任务；隐马尔可夫模型在处理隐状态序列时表现出色。而最大熵和最大熵马尔科夫模型在处理复杂上下文特征时更具灵活性，虽然计算复杂度较高；条件随机场则是解决标注偏置问题最为有效的方法，但也面临着较高的训练复杂度。在具体应用中，应根据任务需求选择合适的算法，充分发挥其特长，克服短板，实现最优的序列标注效果。
+
+\subsection{\texorpdfstring{\textbf{2.1
+深度学习概览}}{2.1 深度学习概览}}\label{21-ux6df1ux5ea6ux5b66ux4e60ux6982ux89c8}
+
+维基百科中，深度学习的定义为：深度学习是机器学习的分支，是一种以人工神经网络为架构，对资料进行表征学习的算法
+。其中``深''是指有多层神经网络，``学习''既指机器学习，也指表征学习，是指从数据中学习表示。
+
+\subsubsection{\texorpdfstring{\textbf{2.1.1
+``深度学习''为什么叫``深度学习''}}{2.1.1 ``深度学习''为什么叫``深度学习''}}\label{211-ux6df1ux5ea6ux5b66ux4e60ux4e3aux4ec0ux4e48ux53ebux6df1ux5ea6ux5b66ux4e60}
+
+某种意义上，深度学习就是多层的神经网络。但现在，``深度学习''这个词似乎远比``神经网络''要火，甚至有和``机器学习''平起平坐之势。为什么要把``深度学习''和``神经网络''\,``机器学习''区分开呢？
+
+在早期，神经网络一直不温不火，学术界普遍觉得这个新事物不靠谱，神经网络一词被许多学术期刊编辑所排斥，有些稿件的标题甚至因为包含
+``神经网络''
+就会被退回。为了不刺激这些人的敏感神经，2006年，Hinton取了个新名字，将模型命名为
+``深度信念网络''（Deep Belief Networks），正式提出了``深度学习''的概念。
+
+深度学习与传统机器学习的不同之处在于，当网络变深后，模型能从数据自动提取特征，如单词的语义表示、句子的语法结构等，不再需要人工提取特征。这也是深度学习和传统机器学习的最主要区别之一。
+
+其次是深度学习对大数据的处理能力。传统机器学习在小规模数据上表现较好（通常是结构化的表格数据），但遇到数量庞大、结构复杂的大数据时，如文本、图像、语音等，传统机器学习就显得捉襟见肘了。以前计算机的计算能力有限，难以处理大规模的计算，训练一个小型的神经网络模型都需要几天。在高性能计算硬件发展起来后（尤其是GPU），深度学习才展现出优势，在图像识别、自然语言处理、信息检索等大数据领域取得显著突破。
+
+\subsubsection{\texorpdfstring{\textbf{2.1.2
+发展历史}}{2.1.2 发展历史}}\label{212-ux53d1ux5c55ux5386ux53f2}
+
+深度学习的发展历史要从人工神经网络说起，其起源可以追溯到20世纪40年代，这一进程经历了多次创新与变革。
+
+在1943年，McCulloch和Pitts提出了电子脑的概念，这一概念奠定了神经网络的基础。他们提出了使用可调权重的简单神经元模型。
+
+1957年，Rosenblatt引入了感知器（Perceptron）模型，这是一种能够进行二分类任务的简单神经网络，并且权重是可学习的。感知器的提出标志着神经网络黄金时代的开始。
+
+在1960年，Widrow和Hoff提出了自适应线性神经元（ADALINE）模型，这个模型也是一种神经网络结构，并引入了可学习的权重和阈值。
+
+1969年，Minsky和Papert指出了感知器的一个重要缺陷------无法解决XOR问题，这一发现导致了人工智能研究领域的第一次低谷，也被称为``人工智能的冬天''。
+
+1986年，通用多层感知器（Multi-layered Perceptron,
+MLP）模型引入了反向传播算法，这一突破由Rumelhart、Hinton和Williams提出，解决了传统感知器无法处理非线性可分问题的困境。反向传播算法的出现使得训练深度神经网络成为可能。
+
+1995年，Vapnik和Cortes提出了支持向量机（SVM），这是一种非常有效的监督学习模型，特别适用于小样本数据集。SVM通过引入核函数，扩展了线性模型的能力，能够处理非线性问题。
+
+2006年，Hinton和Ruslan提出了深度神经网络的预训练方法，这一方法通过逐层预训练和微调，成功训练了更深层次的神经网络，从此开启了深度学习（Deep
+Learning）的新时代。深度神经网络能够进行层次化特征学习，大幅提升了计算机视觉、语音识别和自然语言处理等领域的性能。
+
+综上所述，人工神经网络的发展经历了从简单神经元模型、感知器、ADALINE、反向传播算法、支持向量机到深度学习预训练等多个关键阶段，每一阶段的创新都为现代深度学习技术的兴起奠定了重要基础。
+
+\subsubsection{\texorpdfstring{\textbf{2.1.3
+基本网络架构}}{2.1.3 基本网络架构}}\label{213-ux57faux672cux7f51ux7edcux67b6ux6784}
+
+回望过去，从2006年Hinton提出``深度学习''的概念开始，深度学习其实才发展了不到20年，但已经对人类社会产生了深远的影响。网络结构和模型设计也发展出了各种各样的架构，但大部分模型都由几种基础模型演变而来，下面将一一介绍他们。
+
+全连接神经网络（Fully Connected Neural
+Network，NN）是一种很基础又常用的神经网络结构。在这种网络里，不同节点之间都是相互连接的，这样的结构让它能够充分利用数据，提取出全局特征，灵活性和表达能力都很强。然而，全连接的特点也增长了计算复杂度，容易出现过拟合问题。
+
+卷积神经网络（Convolutional Neural
+Network，CNN）则擅长提取局部特征。CNN通过卷积操作实现特征提取，相较于NN，它的权重数量少，还能通过参数共享减轻计算负担。不同卷积层大小的CNN能够捕获不同尺度的特征，适用于处理图像数据或局部相关性强的文本数据。此外，改良卷积神经网络如Dilated
+CNN（D-CNN）能够扩大感受野，进一步提升特征提取能力。
+
+循环神经网络（Recurrent Neural
+Network，RNN）特别适合处理序列数据，能够捕获上下文序列特征。长短时记忆网络（Long
+Short-Term Memory，LSTM）和门控循环单元（Gated Recurrent
+Unit，GRU）是RNN的两种常见变体，它们可以缓解传统RNN的梯度消失问题，从而更好地捕捉长距离依赖关系。其他改进版本如全互连LSTM、更轻量化的双向RNN（Bi-RNN）以及改进的注意力机制，也进一步提升了RNN的性能。
+
+基于注意力机制的神经网络（Transformer）则通过引入自注意力（Self-Attention）机制，有效处理长距离依赖，并且能够并行化处理，大幅减少了训练时间。BERT（Bidirectional
+Encoder Representations from
+Transformers）是Transformer的经典应用，具备强大的特征提取能力，开启了预训练和微调的范式。在此基础上改进的RoBERTa具有更优异的性能表现，能够在多种下游任务中取得领先成绩。
+
+图神经网络（Graph Neural
+Network，GNN）是用于处理非欧几里得空间数据的模型，适用于图结构数据分析。其变体如图卷积网络（GCN）和关系图卷积网络（R-GCN）能够分别处理同构图和异构图的数据，具有很强的表达能力，广泛应用于社交网络分析、推荐系统等领域。
+
+总的来说，这几种神经网络模型各有千秋，全连接神经网络适用于通用场景，卷积神经网络突出局部特征提取，循环神经网络强调序列信息捕捉，基于注意力机制的神经网络在特征提取上表现优异，而图神经网络专注于处理复杂图结构数据。在实际应用中，应根据具体任务和数据的特点选择最合适的模型结构，以实现最佳的效果。
+
+\subsection{\texorpdfstring{\textbf{2.2
+深度前馈网络}}{2.2 深度前馈网络}}\label{22-ux6df1ux5ea6ux524dux9988ux7f51ux7edc}
+
+\subsubsection{\texorpdfstring{\textbf{2.2.1
+整体概览}}{2.2.1 整体概览}}\label{221-ux6574ux4f53ux6982ux89c8}
+
+深度前馈网络（Deep Feedforward Network），也称为多层感知器（Multilayer
+Perceptron，MLP），是人工神经网络中最基础最常见的一种类型。它由一系列全连接层组成，每层的神经元与下一层的神经元全部连接。数据在网络中单向传递，从输入层经过隐藏层直到输出层，称为前馈网络。深度前馈网络有3个重要组成部分：损失函数、反向传播算法和激活函数。
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{损失函数。}损失函数用于衡量预测结果与实际结果之间的差异，常见的损失函数包括均方误差和交叉熵。这一差异通过反向传播算法用于更新网络的权重，以最小化损失函数。
+\item
+  \textbf{反向传播算法。}反向传播是训练前馈网络的核心技术。它首先计算输出层的损失，然后逐层反向传递，通过链式法则计算每个权重的梯度。利用这些梯度，使用优化算法如随机梯度下降更新权重，逐步减小损失。
+\item
+  \textbf{激活函数。}激活函数是前馈网络的关键组件，它引入非线性能力，使网络能够学习和表示复杂的非线性关系。常用的激活函数有ReLU、tanh和sigmoid等。它们在每一层神经元的计算过程中进行非线性变换。
+\end{enumerate}
+
+在基础架构之外，深度前馈网络可以有许多高级结构，如多层深度网络、残差网络和生成对抗网络等。这些高级架构可以通过更复杂的网络设计和训练策略增强模型的性能和表达能力。
+
+最后，总结来说，深度前馈网络是深度学习的基础模型，理解其结构和工作原理对学习其他复杂模型至关重要。
+
+\subsubsection{\texorpdfstring{\textbf{2.2.2
+从感知器到神经网络}}{2.2.2 从感知器到神经网络}}\label{222-ux4eceux611fux77e5ux5668ux5230ux795eux7ecfux7f51ux7edc}
+
+感知器（Perceptron）是有着最简单形式的前馈神经网络，有着悠久的发展历史。在1957年，感知器首次由Frank
+Rosenblatt在康奈尔航空实验室发明。早在20世纪40年代，McCulloch和Pitts就描述了一种类似的神经元模型。
+
+1958年，Rosenblatt发表声明称，感知器将发展成为一种能``行走、说话、看见、写作、自我复制并意识到自己存在的''计算机。
+
+20世纪60年代，人们认识到多层感知器相对于单层感知器具有更强的处理能力。这个观点得到了Minsky和Papert以及Grossberg的支持。
+
+1964年，Aizerman引入了核感知器，将感知器扩展到核方法，以处理更多复杂的数据集。
+
+1998年，Freund和Schapire首次提出了在一般不可分情况下的边界保证。
+
+1999年，投票感知器被提出，这种方法提供了与核支持向量机（SVM）相当的泛化界限。
+
+感知器模型如图所示，通过加权输入和偏置值，经过激活函数生成输出。感知器的这些创新和发展为现代神经网络和机器学习算法奠定了重要基础。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps11.jpg}}
+
+\subsubsection{\texorpdfstring{\textbf{2.2.3
+单层感知器}}{2.2.3 单层感知器}}\label{223-ux5355ux5c42ux611fux77e5ux5668}
+
+单层感知器（Single-layer
+Perceptron）是最基本的神经网络模型之一，其输出通过线性组合输入信号和偏置值，再通过一个激活函数计算得出。具体公式如下：
+
+{[} y = f(W\^{}T x) = f\textbackslash left(
+\textbackslash sum\_\{i=1\}\^{}\{3\} W\_i x\_i + 1 \textbackslash times
+b \textbackslash right) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps12.jpg}}
+
+其中，{[} f {]}是激活函数。
+
+常见的激活函数包括：
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps13.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Sigmoid函数}：
+\end{enumerate}
+
+{[} f(z) = \textbackslash frac\{1\}\{1 + \textbackslash exp(-z)\} {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps14.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{双曲正切函数（Tanh）}：
+\end{enumerate}
+
+{[} \textbackslash tanh(z) = \textbackslash frac\{\textbackslash exp(z)
+\textbackslash exp(-z)\}\{\textbackslash exp(z) +
+\textbackslash exp(-z)\} {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps15.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{ReLU函数（Rectified Linear Unit）}：
+\end{enumerate}
+
+{[} f(z) = \textbackslash max(0, z) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps16.jpg}}
+
+这些激活函数有助于引入非线性变换，使神经网络能够拟合更复杂的关系。
+
+另外，这些激活函数的导数也非常有用，在反向传播算法中计算梯度时需要用到：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Sigmoid函数的导数}：
+\end{enumerate}
+
+{[} f\textquotesingle(z) = f(z) (1 f(z)) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps17.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{双曲正切函数的导数}：
+\end{enumerate}
+
+{[} f\textquotesingle(z) = 1 (\textbackslash tanh(z))\^{}2 {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps18.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{ReLU函数的导数}：
+\end{enumerate}
+
+{[} f\textquotesingle(z) = \textbackslash begin\{cases\}
+
+0, \& \textbackslash text\{if \} z \textbackslash leq 0 \textbackslash{}
+
+1, \& \textbackslash text\{if \} z \textgreater{} 0
+
+\textbackslash end\{cases\} {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps19.jpg}}
+
+单层感知器通过这些激活函数将输入信号转换为输出值，实现简单的分类和回归任务。下侧的图示展示了单层感知器的基本架构，输入信号经过加权和偏置处理，通过激活函数生成输出结果。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps20.jpg}}
+
+\subsubsection{\texorpdfstring{\textbf{2.2.4
+Softmax输出单元}}{2.2.4 Softmax输出单元}}\label{224-softmaxux8f93ux51faux5355ux5143}
+
+Softmax输出单元定义如下：
+
+{[} \textbackslash text\{softmax\}(z)\_i =
+\textbackslash frac\{\textbackslash exp(z\_i)\}\{\textbackslash sum\_j
+\textbackslash exp(z\_j)\} {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps21.jpg}}
+
+Softmax单元自然地表示一个离散变量的概率分布，该变量有k个可能值。
+
+一个线性层预测未归一化的对数概率，其公式为
+
+{[} z = W\^{}T h + b {]}
+
+其中，{[} z\_i = \textbackslash log
+\textbackslash tilde\{P\}(y=i\textbar x) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps22.jpg}}
+
+这种方法可以视为sigmoid函数的推广，后者用于表示二元变量的概率分布。相较于sigmoid，softmax能够处理多分类问题。
+
+这可以视为sigmoid函数的推广，sigmoid函数用于表示二元变量的概率分布。
+
+Softmax函数通常用作分类器的输出。对数似然中的对数项可以抵消softmax的指数项，其公式为
+
+{[} \textbackslash log \textbackslash text\{softmax\}(z)\_i = z\_i
+\textbackslash log \textbackslash sum\_j \textbackslash exp(z\_j) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps23.jpg}}
+
+\subsubsection{\texorpdfstring{\textbf{2.2.5}
+\textbf{深度前馈网络}}{2.2.5 深度前馈网络}}\label{225-ux6df1ux5ea6ux524dux9988ux7f51ux7edc}
+
+深度前馈网络（Deep Feedforward Networks），也称为多层感知器（Multi-layer
+Perceptron），是一种基础的神经网络结构。它由多个层组成，包括输入层、一个或多个隐藏层和输出层。此外，网络中还包含偏置单元，以增强模型的表现力。
+
+深度前馈网络的目标是逼近某个映射函数 ( f\^{}* )，例如，将输入 ( x )
+映射到一个类别 ( y
+)。具体来说，前馈网络通过定义一个映射关系，形式上可以表示为
+
+{[} y = f\^{}*(x; \textbackslash theta) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps24.jpg}}
+
+其中，参数 ( \textbackslash theta ) 包括权重 ( W ) 和偏置 ( b
+)。这些参数通过学习过程进行优化，以实现最佳逼近。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps25.jpg}}
+
+图中的示例展示了一个包含四个隐藏层的深度前馈网络。网络从输入层开始，将输入信号
+( x\_i ) 传递到第一隐藏层的神经元 ( h\_1\^{}1, h\_2\^{}1, h\_3\^{}1
+)，经过多层处理，最终传递到输出层的 ( y\_1, y\_2 )。
+
+前馈网络的训练过程包括前向传播和反向传播。在前向传播过程中，输入信号经过层层传递和处理，最终输出预测结果。在反向传播过程中，根据预测结果和真实标签之间的差异（损失），计算每个参数的梯度，然后通过梯度下降法（或其他优化算法）调整参数，以最小化损失函数。
+
+通过多层结构、非线性激活函数和偏置单元的组合，深度前馈网络具有强大的表达能力，可以拟合复杂的非线性关系，广泛应用于分类、回归和其他任务。
+
+\paragraph{\texorpdfstring{\textbf{2.2.5.1
+形式化计算}}{2.2.5.1 形式化计算}}\label{2251-ux5f62ux5f0fux5316ux8ba1ux7b97}
+
+深度前馈网络（Deep Feedforward
+Networks）是一种基础且常见的神经网络架构。它由多个层组成，包括输入层（Layer
+(L\_1)）、一个或多个隐藏层（Layer (L\_2, L\_3,
+\textbackslash ldots)）和输出层（Layer
+(L\_5)）。每一层的神经元与下一层的神经元全连接，从输入层向输出层单向传递信息，没有反馈连接。
+
+网络中的输入层接受原始输入信号，例如 ( x\_1, x\_2, x\_3
+)。这些信号经过加权求和和加上偏置后，传递到第一个隐藏层。公式如下：
+
+{[} z\^{}2 = W\^{}1 \textbackslash times x + b\^{}1 {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps26.jpg}}
+
+其中 ( z\^{}2 ) 是传递到隐藏层 ( h\^{}2 ) 的线性组合结果， ( W\^{}1 )
+是输入到第一个隐藏层的权重矩阵， ( b\^{}1 ) 是偏置向量。
+
+经过激活函数的非线性变换后，得到第一个隐藏层的输出：
+
+{[} h\^{}2 = f(z\^{}2) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps27.jpg}}
+
+激活函数 ( f ) 的常见选择包括ReLU、sigmoid或tanh。
+
+这一过程在随后的隐藏层中重复进行，例如：
+
+{[} z\^{}\{l+1\} = W\^{}l \textbackslash times h\^{}l + b\^{}l {]}
+
+{[} h\^{}\{l+1\} = f(z\^{}\{l+1\}) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps28.jpg}}
+
+最终，最后一个隐藏层的输出传递到输出层，经过最后一次线性变换和激活函数处理，得到输出：
+
+{[} y = f(z\^{}L) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps29.jpg}}
+
+其中 ( z\^{}L ) 是最后一个隐藏层的输出经过线性变换后的结果。
+
+深度前馈网络通过多个隐藏层和非线性激活函数进行复杂的特征提取和模式识别，广泛应用于分类、回归和其他任务。每一层的权重和偏置参数通过训练过程进行学习和优化，以最小化预测结果与真实结果之间的误差，通常使用反向传播算法来调整权重和偏置。
+
+\subsubsection{\texorpdfstring{\textbf{2.2.6}
+\textbf{示例：学习异或（XOR）}}{2.2.6 示例：学习异或（XOR）}}\label{226-ux793aux4f8bux5b66ux4e60ux5f02ux6216xor}
+
+让我们通过一个经典例子------学习XOR问题，来说明深度前馈网络的工作原理。XOR问题是一个著名的非线性分类任务，用简单的线性模型无法解决，而深度前馈网络可以通过隐藏层和非线性激活函数完成这一任务。
+
+\paragraph{\texorpdfstring{\textbf{2.2.6.1}
+\textbf{扩展线性模型}}{2.2.6.1 扩展线性模型}}\label{2261-ux6269ux5c55ux7ebfux6027ux6a21ux578b}
+
+线性函数 (\textbackslash phi(x) = W\^{}T x)
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps30.jpg}}
+
+在某些情况下无法有效工作，因为它们的表达能力有限。当处理复杂的数据模式和非线性关系时，我们需要在模型中引入非线性元素。
+
+为了扩展线性模型，我们可以使用非线性变换(\textbackslash phi(x))，这种方法可以捕捉数据中的非线性特征。通过这种方式，输入信号
+(x) 经过非线性变换(\textbackslash phi(x))后，再进行线性组合。
+
+公式如下：
+
+{[} y = w\^{}T \textbackslash phi(x) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps31.jpg}}
+
+图中展示了这一过程：首先，将输入 (x)
+传递到一个包含非线性激活函数的隐藏层，经过这些隐藏层的处理，得到非线性变换后的特征(\textbackslash phi(x))。最后，将这些特征输入到线性模型中，得到最终的输出
+(y)。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps32.jpg}}
+
+这种方法利用了深度神经网络中的隐藏层和非线性激活函数，使得模型可以更好地拟合复杂的数据模式和非线性关系，从而提高模型的表现力和预测能力。
+
+为了表示 ( x ) 的非线性函数，可以使用非线性函数 ( \textbackslash phi(x)
+) 来转换 ( x )。类似的``核''技巧也能获得非线性效果。
+
+核技巧是一种通过在高维空间中处理数据来获得非线性结果的方法。这就意味着在不显式计算高维映射的情况下，引入非线性。
+
+支持向量机（SVM）中：
+
+{[} f(x) = W\^{}T x + b \textbackslash rightarrow f(x) = b +
+\textbackslash sum\_i \textbackslash alpha\_i \textbackslash phi(x)
+\textbackslash phi(x\^{}i) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps33.jpg}}
+
+通过核技巧，我们将SVM问题映射到高维空间，通过内积计算得到决策函数
+f(x)。其中，α i是拉格朗日乘数， ϕ(x) 是输入向量 x 的高维映射。
+
+其中，为了计算 \emph{ϕ}(\emph{x}) 和 \emph{ϕ}(\emph{x**i})
+的内积，我们引入了核函数 \emph{K}(\emph{x},\emph{x**i})
+
+(\textbackslash phi(x) \textbackslash phi(x\^{}i) = K(x, x\^{}i) )。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps34.jpg}}
+
+那么如何选择映射 ( \textbackslash phi ) 呢？
+
+使用非常通用的 ( \textbackslash phi )，例如无限维的 ( \textbackslash phi
+)，但这种方法的泛化能力较差。
+
+手动设计 ( \textbackslash phi )，但在不同领域之间的迁移性较差。
+
+深度学习的策略是学习 ( \textbackslash phi )。我们将表示参数化为 (
+\textbackslash phi(x; \textbackslash theta)
+)% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps35.jpg}}
+
+，并使用优化算法找到 ( \textbackslash theta )。
+
+这样一来，无需显式计算高维空间的映射，只需使用核函数直接计算内积。常见的核函数包括：
+
+线性核 K(x,xi)=xTxi
+
+多项式核 K(x,xi)=(xTxi+1)d
+
+高斯核（RBF核） K(x,xi)=exp(−γ∥x−xi∥2)
+
+这种策略结合了前两种方法的优势，使其具有高度的通用性------通过使用非常广泛的函数族
+( \textbackslash phi(x; \textbackslash theta)
+)。人类设计者只需找到合适的一般函数族，而不需要精确找到特定函数。
+
+\paragraph{\texorpdfstring{\textbf{2.2.6.2
+线性模型不适用}}{2.2.6.2 线性模型不适用}}\label{2262-ux7ebfux6027ux6a21ux578bux4e0dux9002ux7528}
+
+在学习异或（XOR）例子中，我们关注的不是统计泛化，而是对四个特定点的正确分类。
+
+这些点是 ( \textbackslash mathbf\{X\} = \{{[}0,0{]}\^{}T,
+{[}0,1{]}\^{}T, {[}1,0{]}\^{}T, {[}1,1{]}\^{}T\} )。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps36.jpg}}
+
+我们的唯一挑战是拟合这个训练集。
+
+异或（XOR）函数提供了我们要学习的目标函数 ( y = f\^{}\emph{(x)
+)。我们的模型提供了一个函数 ( y = f(x; \textbackslash theta)
+)，然后我们的学习算法将调整参数 ( \textbackslash theta )，使得 ( f )
+尽可能接近 ( f\^{}} )。
+
+我们将这个问题视为回归问题，并使用均方误差（MSE）进行处理。均方误差损失函数的定义如下：
+
+{[} J(\textbackslash theta) = \textbackslash frac\{1\}\{4\}
+\textbackslash sum\_\{x \textbackslash in X\} (f\^{}*(x) f(x;
+\textbackslash theta))\^{}2 {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps37.jpg}}
+
+通常，均方误差不用于二元数据，但在这里数学处理较为简单。我们选择一个线性模型的形式：
+
+{[} f(x; \textbackslash mathbf\{w\}, b) = x\^{}T
+\textbackslash mathbf\{w\} + b {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps38.jpg}}
+
+通过最小化 ( J(\textbackslash theta) )，我们得到 (
+\textbackslash mathbf\{w\} = 0 ) 和 ( b = \textbackslash frac\{1\}\{2\}
+)。因此，线性模型在每个输入点上输出的值都是 (
+\textbackslash frac\{1\}\{2\} )。
+
+解决XOR问题需要通过学习表示来完成。当 ( x\_1 = 0 ) 时，输出必须随 ( x\_2
+) 增加；当 ( x\_1 = 1 ) 时，输出必须随 ( x\_2 ) 减少。线性模型 ( f(x,
+\textbackslash mathbf\{w\}, b) = x\_1 w\_1 + x\_2 w\_2 + b ) 必须给 (
+x\_2 ) 分配一个唯一的权重 ( w\_2 )，因此无法解决这个问题。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps39.jpg}}
+
+一个更好的解决方案是使用一个简单的前馈网络。这个网络包含一层隐藏层，其中有两个隐藏单元。非线性特征将输入
+( x = {[}1, 0{]}\^{}T ) 和 ( x = {[}0, 1{]}\^{}T )
+都映射到特征空间中的一个单点 ( h = {[}1, 0{]}\^{}T
+)。这样，一个线性模型现在能够解决这个问题。
+
+\paragraph{\texorpdfstring{\textbf{2.2.6.3
+前馈网络解决XOR问题}}{2.2.6.3 前馈网络解决XOR问题}}\label{2263-ux524dux9988ux7f51ux7edcux89e3ux51b3xorux95eeux9898}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps40.jpg}}
+
+第一层（隐藏层）：
+
+隐藏层的输出通过以下公式计算：
+
+{[} h\_i = f(x\^{}T W\_\{\textbackslash cdot,i\} + c\_i) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps41.jpg}}
+
+其中，( c ) 是偏置变量。通常选择 ( g )
+作为逐元素激活函数。默认的激活函数是修正线性单元（ReLU），定义为：
+
+{[} g(z) = \textbackslash max\{0, z\} {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps42.jpg}}
+
+完整的网络：
+
+整个网络的输出通过以下公式计算：
+
+{[} f(x; W, c, w, b) = w\^{}T f(W\^{}T x + c) + b {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps43.jpg}}
+
+这个公式表示输入 ( x ) 经由权重矩阵 ( W ) 和偏置 ( c )
+的线性组合，再通过非线性激活函数 ( f ) 进行变换，最终得到输出 ( y )
+。完整的网络模型包括输入层到隐藏层，再到输出层的所有信息传递和计算过程。
+
+前馈网络解决XOR问题
+
+设权重矩阵 ( W ) 为：
+
+{[} W = \textbackslash begin\{bmatrix\} 1 \& 1 \textbackslash{} 1 \& 1
+\textbackslash end\{bmatrix\} {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps44.jpg}}
+
+偏置向量 ( c ) 为：
+
+{[} c = \textbackslash begin\{bmatrix\} 0 \textbackslash{} -1
+\textbackslash end\{bmatrix\} {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps45.jpg}}
+
+输出层权重向量 ( w ) 为：
+
+{[} w = \textbackslash begin\{bmatrix\} 1 \textbackslash{} -2
+\textbackslash end\{bmatrix\} {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps46.jpg}}
+
+偏置值 ( b = 0 )。我们将得到所有点的正确答案。
+
+现在我们一步步解析模型的处理过程：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  设计矩阵 ( X ) 包含四个点：
+\end{enumerate}
+
+{[} X = \textbackslash begin\{bmatrix\}
+
+0 \& 0 \textbackslash{}
+
+0 \& 1 \textbackslash{}
+
+1 \& 0 \textbackslash{}
+
+1 \& 1
+
+\textbackslash end\{bmatrix\} {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps47.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  计算 ( XW )：
+\end{enumerate}
+
+{[} XW = \textbackslash begin\{bmatrix\}
+
+0 \& 0 \textbackslash{}
+
+1 \& 1 \textbackslash{}
+
+1 \& 1 \textbackslash{}
+
+2 \& 2
+
+\textbackslash end\{bmatrix\} {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps48.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  加上偏置 ( c )：
+\end{enumerate}
+
+{[} XW + c = \textbackslash begin\{bmatrix\}
+
+0 \& -1 \textbackslash{}
+
+1 \& 0 \textbackslash{}
+
+1 \& 0 \textbackslash{}
+
+2 \& 1
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps49.jpg}}
+
+\textbackslash end\{bmatrix\} {]}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  应用ReLU激活函数：
+\end{enumerate}
+
+{[} g(XW + c) = \textbackslash begin\{bmatrix\}
+
+0 \& 0 \textbackslash{}
+
+1 \& 0 \textbackslash{}
+
+1 \& 0 \textbackslash{}
+
+2 \& 1
+
+\textbackslash end\{bmatrix\} {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps50.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  乘以权重向量 ( w )：
+\end{enumerate}
+
+{[} w g(XW + c) + b = \textbackslash begin\{bmatrix\}
+
+0 \textbackslash times 1 + 0 \textbackslash times (-2) \textbackslash{}
+
+1 \textbackslash times 1 + 0 \textbackslash times (-2) \textbackslash{}
+
+1 \textbackslash times 1 + 0 \textbackslash times (-2) \textbackslash{}
+
+2 \textbackslash times 1 + 1 \textbackslash times (-2)
+
+\textbackslash end\{bmatrix\}
+
+= \textbackslash begin\{bmatrix\}
+
+0 \textbackslash{}
+
+1 \textbackslash{}
+
+1 \textbackslash{}
+
+0
+
+\textbackslash end\{bmatrix\} {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps51.jpg}}
+
+通过这个过程，我们成功地用前馈网络正确地解决了XOR问题。
+
+前馈网络解决XOR问题
+
+我们通过定义如下参数简单地指定了解决方案，从而实现了零误差：
+
+{[} W = \textbackslash begin\{bmatrix\} 1 \& 1 \textbackslash{} 1 \& 1
+\textbackslash end\{bmatrix\} {]}
+
+{[} c = \textbackslash begin\{bmatrix\} 0 \textbackslash{} -1
+\textbackslash end\{bmatrix\} {]}
+
+{[} w = \textbackslash begin\{bmatrix\} 1 \textbackslash{} -2
+\textbackslash end\{bmatrix\} {]}
+
+{[} b = 0 {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps52.jpg}}
+
+在实际情况中，可能会有数十亿个参数和数十亿个训练样本，因此无法简单地猜测出解决方案。相反，使用梯度下降优化可以找到具有很小误差的参数集。
+
+梯度下降法是一种迭代优化算法，用于找到函数的极小值或极大值。其目标是最小化目标函数（通常是损失函数），并通过计算该函数的梯度来指导参数更新。算法从初始参数值开始，每一步都沿着梯度的反方向移动参数，调整的步长由学习率确定。根据使用的数据量，梯度下降法分为批量梯度下降、随机梯度下降和小批量梯度下降。选择合适的学习率和优化技巧，如动态学习率和动量，可以加快收敛速度并提高算法的稳定性。梯度下降法广泛应用于机器学习和深度学习中，用于优化模型参数，使其在训练数据上的表现更佳。
+
+梯度下降法可以类比为在山坡上行走，目的是找到山谷的最低点。梯度表示当前所在位置坡度的方向和陡峭程度，每一步按照负梯度的方向前进一定步长（学习率），逐步逼近最低点。
+
+梯度下降法的核心思想是：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  目标函数（损失函数） ：我们希望最小化的函数，通常表示为 J(θ)，其中 θ
+  是参数向量。
+\item
+  梯度 ：目标函数 J(θ) 对参数 θ 的偏导数，表示为
+  ∇J(θ)。梯度指向函数上升最快的方向，而负梯度则指向下降最快的方向。
+\item
+  学习率（步长） ：一个标量，表示每次迭代中参数更新的步长，通常表示为
+  α。
+\end{enumerate}
+
+梯度下降法的具体步骤如下：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  初始化 ：初始化参数 θ （常用随机值或特定初始化方法）。
+\item
+  计算梯度 ：计算损失函数 J(θ) 对参数 θ 的梯度 ∇J(θ)。
+\item
+  更新参数 ：按梯度下降的方向更新参数：
+\end{enumerate}
+
+θ:=θ−α∇J(θ)
+
+其中，α 是学习率。
+
+迭代
+：重复步骤2和3，直到损失函数收敛到最小值（或最大值），即梯度接近零，或者达到预先设定的迭代次数。
+
+\subsubsection{\texorpdfstring{\textbf{2.2.7
+损失函数}}{2.2.7 损失函数}}\label{227-ux635fux5931ux51fdux6570}
+
+假设我们有一组训练数据 (\{(x\^{}1, y\^{}1), \textbackslash ldots,
+(x\^{}n, y\^{}n)\})，
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps53.jpg}}
+
+共有 (n) 个训练样本。为了学习我们的参数 (\textbackslash theta = (W,
+b))，我们可以定义以下损失函数：
+
+{[} \textbackslash mathcal\{J\}(W, b; x, y) =
+\textbackslash frac\{1\}\{2\} \textbar{} \textbackslash hat\{y\} y
+\textbar{}\^{}2 {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps54.jpg}}
+
+其中，(\textbackslash hat\{y\}) 是学习到的神经网络预测的值。
+
+损失函数衡量了预测输出与真实值之间的差异。
+
+\paragraph{\texorpdfstring{\textbf{2.2.7.1
+训练损失}}{2.2.7.1 训练损失}}\label{2271-ux8badux7ec3ux635fux5931}
+
+我们定义用于训练的数据集的损失函数为：
+
+{[} \textbackslash mathcal\{J\}(W, b;
+x\emph{\{\textbackslash text\{train\}\},
+y}\{\textbackslash text\{train\}\}) = \textbackslash frac\{1\}\{2\}
+\textbar{} \textbackslash hat\{y\} y\_\{\textbackslash text\{train\}\}
+\textbar{}\^{}2 {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps55.jpg}}
+
+\textbf{训练损失}：模型的预测应与训练数据相匹配。训练损失用于指导模型优化的方向。
+
+图中的蓝色点表示训练数据。在训练损失为零的情况下，模型完美地拟合了所有训练数据点。通过最小化损失函数，模型的参数不断调整，以提高预测的准确性。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps56.jpg}}
+
+\paragraph{\texorpdfstring{\textbf{2.2.7.2
+验证损失}}{2.2.7.2 验证损失}}\label{2272-ux9a8cux8bc1ux635fux5931}
+
+我们定义用于验证数据集的损失函数为：
+
+{[} \textbackslash mathcal\{J\}(W, b;
+x\emph{\{\textbackslash text\{valid\}\},
+y}\{\textbackslash text\{valid\}\}) = \textbackslash frac\{1\}\{2\}
+\textbar{} \textbackslash hat\{y\} y\_\{\textbackslash text\{valid\}\}
+\textbar{}\^{}2 {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps57.jpg}}
+
+\textbf{验证损失}：用于测试模型在未见过的数据上的泛化能力。
+
+图中绿色方块表示验证数据。验证损失较大意味着模型在验证数据上的表现不佳，说明存在过拟合（Over-fitting）。过拟合问题表现在模型可以很好地拟合训练数据，但在未见过的数据上表现较差。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps58.jpg}}
+
+\paragraph{\texorpdfstring{\textbf{2.2.7.3}
+\textbf{正则项}}{2.2.7.3 正则项}}\label{2273-ux6b63ux5219ux9879}
+
+为了避免过拟合，我们可以在损失函数中添加一个正则项。正则化后的损失函数定义如下：
+
+{[} \textbackslash mathcal\{J\}(W, b) = \textbackslash frac\{1\}\{n\}
+\textbackslash left{[} \textbackslash sum\emph{\{i=1\}\^{}\{n\}
+\textbackslash frac\{1\}\{2\} \textbar{} \textbackslash hat\{y\} y
+\textbar{}\^{}2 \textbackslash right{]} +
+\textbackslash frac\{\textbackslash lambda\}\{2\}
+\textbackslash sum}\{l=1\}\^{}\{L\}
+\textbackslash sum\emph{\{i=1\}\^{}\{s\_l\}
+\textbackslash sum}\{j=1\}\^{}\{s\emph{\{l-1\}\} (W}\{ji\}\^{}l)\^{}2
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps59.jpg}}
+
+模型应当保持``简单''，以便在测试数据上表现良好。需要注意的是，我们通常不会对偏置项
+( b ) 进行正则化，因为它影响不大。
+
+图中绿色的线表示经过正则化后的模型。正则化有助于抑制模型的过拟合现象，使模型在训练数据和验证数据上都能表现得比较平稳，不会过度拟合训练数据的噪声，从而提升模型的泛化能力。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps60.jpg}}
+
+\paragraph{\texorpdfstring{\textbf{2.2.7.4
+损失函数类型}}{2.2.7.4 损失函数类型}}\label{2274-ux635fux5931ux51fdux6570ux7c7bux578b}
+
+在机器学习中，损失函数用于衡量模型预测输出与真实值之间的差异。不同类型的任务使用不同的损失函数。
+
+回归任务：常用的损失函数包括均方误差（Mean Squared Error,
+MSE）和平均绝对误差（Mean Absolute Error, MAE）。
+
+分类任务：常用的损失函数是交叉熵（Cross-Entropy）。
+
+其他：例如支持向量机（SVM）中使用的Hinge Loss。
+
+常见的损失函数及其公式如下：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  均方误差（Mean Squared Error, MSE）：
+\end{enumerate}
+
+{[} \textbackslash frac\{1\}\{n\} \textbackslash sum\_\{i=1\}\^{}\{n\}
+(y\_i \textbackslash hat\{y\_i\})\^{}2 {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps61.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  平均绝对误差（Mean Absolute Error, MAE）：
+\end{enumerate}
+
+{[} \textbackslash frac\{1\}\{n\} \textbackslash sum\_\{i=1\}\^{}\{n\}
+\textbar y\_i \textbackslash hat\{y\_i\}\textbar{} {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps62.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  类别交叉熵（Categorical Cross-Entropy）：
+\end{enumerate}
+
+{[} -\textbackslash sum\_\{i=1\}\^{}\{n\} y\_i
+\textbackslash log(\textbackslash hat\{y\_i\}) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps63.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Hinge Loss（用于SVM）：
+\end{enumerate}
+
+{[} \textbackslash max(0, 1 y \textbackslash cdot
+\textbackslash hat\{y\}) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps64.jpg}}
+
+不同的损失函数适用于不同的应用场景，根据具体任务和数据特点选择合适的损失函数，有助于提升模型的性能和效果。
+
+\subsubsection{\texorpdfstring{\textbf{2.2.8
+反向传播算法}}{2.2.8 反向传播算法}}\label{228-ux53cdux5411ux4f20ux64adux7b97ux6cd5}
+
+\paragraph{\texorpdfstring{\textbf{2.2.8.1
+模型学习}}{2.2.8.1 模型学习}}\label{2281-ux6a21ux578bux5b66ux4e60}
+
+我们的目标是最小化损失函数 ( \textbackslash mathcal\{J\}(W, b) )
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps65.jpg}}
+
+，这是关于参数 (W) 和 (b) 的函数。
+
+首先，我们将每个参数 ( W\_\{ij\}\^{}\{(l)\} ) 和 ( b\_i\^{}\{(l)\} )
+初始化为接近零的小随机值，例如按照均值为零、方差为
+(\textbackslash epsilon\^{}2)
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps66.jpg}}
+
+的正态分布来随机取值。全零初始化效果很差，因为它会导致所有单元的输出相同，无法学习到有效的特征。
+
+接下来，我们应用优化算法，例如批量梯度下降，来调整参数以最小化损失函数。
+
+由于 ( \textbackslash mathcal\{J\}(W, b) )
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps67.jpg}}
+
+是一个非凸函数，梯度下降容易陷入局部最优解。然而，实际应用中，梯度下降通常能够很好地工作。通过不断更新参数，模型在训练数据上的表现将不断提升，最终达到较好的效果。
+
+一次梯度下降迭代更新参数 ( W ) 和 ( b )，公式如下：
+
+{[} W\emph{\{ij\}\^{}\{(l)\} = W}\{ij\}\^{}\{(l)\} \textbackslash alpha
+\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+W\_\{ij\}\^{}\{(l)\}\} \textbackslash mathcal\{J\}(W, b) {]}
+
+{[} b\_i\^{}\{(l)\} = b\_i\^{}\{(l)\} \textbackslash alpha
+\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+b\_i\^{}\{(l)\}\} \textbackslash mathcal\{J\}(W, b) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps68.jpg}}
+
+其中 (\textbackslash alpha) 是学习率。
+
+关键步骤是计算上述偏导数。接下来我们描述反向传播算法，它提供了一种高效的计算这些偏导数的方法。通过反向传播算法，神经网络能够快速地调整权重和偏置，从而最小化损失函数，提高模型性能。
+
+\paragraph{\texorpdfstring{\textbf{2.2.8.2}
+\textbf{反向传播}}{2.2.8.2 反向传播}}\label{2282-ux53cdux5411ux4f20ux64ad}
+
+前向传播：输入 ( x )
+提供初始信息，这些信息传递到每一层的隐藏单元，最后产生预测值 (
+\textbackslash hat\{y\} )。
+
+反向传播：简称
+backprop，它允许从损失函数中传递的信息反向流经网络，以计算梯度。通过梯度计算，网络的权重和偏置可以进行调整，从而最小化损失函数，提高模型的准确性。
+
+\paragraph{\texorpdfstring{\textbf{2.2.8.2.1
+训练}}{2.2.8.2.1 训练}}\label{22821-ux8badux7ec3}
+
+梯度下降的一次迭代通过如下方式更新参数 (W, b)：
+
+{[} W\emph{\{ij\}\^{}\{(l)\} = W}\{ij\}\^{}\{(l)\} \textbackslash alpha
+\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+W\_\{ij\}\^{}\{(l)\}\} \textbackslash mathcal\{J\}(W, b) {]}
+
+{[} b\_i\^{}\{(l)\} = b\_i\^{}\{(l)\} \textbackslash alpha
+\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+b\_i\^{}\{(l)\}\} \textbackslash mathcal\{J\}(W, b) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps69.jpg}}
+
+其中 (\textbackslash alpha) 是学习率。
+
+偏导数的计算如下：
+
+{[}
+\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+W\emph{\{ij\}\^{}\{(l)\}\} \textbackslash mathcal\{J\}(W, b) =
+\textbackslash left{[} \textbackslash frac\{1\}\{n\}
+\textbackslash sum}\{i=1\}\^{}\{n\}
+\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+W\emph{\{ij\}\^{}\{(l)\}\} \textbackslash mathcal\{J\}(W, b; x, y)
+\textbackslash right{]} + \textbackslash lambda W}\{ij\}\^{}\{(l)\} {]}
+
+{[}
+\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+b\_i\^{}\{(l)\}\} \textbackslash mathcal\{J\}(W, b) =
+\textbackslash frac\{1\}\{n\} \textbackslash sum\_\{i=1\}\^{}\{n\}
+\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+b\_i\^{}\{(l)\}\} \textbackslash mathcal\{J\}(W, b; x, y) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps70.jpg}}
+
+现在，我们的问题变成了如何通过反向传播算法计算：
+
+{[} \textbackslash frac\{1\}\{n\}
+\textbackslash sum\emph{\{i=1\}\^{}\{n\}
+\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+W}\{ij\}\^{}\{(l)\}\} \textbackslash mathcal\{J\}(W, b; x, y) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps71.jpg}}
+
+反向传播算法提供了一种高效的方法来计算这些偏导数，以更新网络参数并最小化损失函数。
+
+偏导数的具体计算
+
+对于第 ( l ) 层的权重 ( W\_\{ij\}\^{}\{(l)\} ) 和偏置 ( b\_i\^{}\{(l)\}
+)，其偏导数如下：
+
+{[}
+\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+W\emph{\{ij\}\^{}\{(l)\}\} \textbackslash mathcal\{J\}(W, b) =
+\textbackslash left{[} \textbackslash frac\{1\}\{n\}
+\textbackslash sum}\{i=1\}\^{}\{n\}
+\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+W\emph{\{ij\}\^{}\{(l)\}\} \textbackslash mathcal\{J\}(W, b; x, y)
+\textbackslash right{]} + \textbackslash lambda W}\{ij\}\^{}\{(l)\} {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps72.jpg}}
+
+其中，
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  (\textbackslash frac\{1\}\{n\}
+  \textbackslash sum\emph{\{i=1\}\^{}\{n\}
+  \textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+  W}\{ij\}\^{}\{(l)\}\} \textbackslash mathcal\{J\}(W, b; x, y))
+  是对每个训练样本计算得来的平均导数。
+\end{enumerate}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps73.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  (\textbackslash lambda W\_\{ij\}\^{}\{(l)\})
+  是正则化项的导数，这部分用于防止过拟合，确保模型的复杂度不过高。
+\end{enumerate}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps74.jpg}}
+
+类似地，对于偏置 ( b\_i\^{}\{(l)\} )，其偏导数为：
+
+{[}
+\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+b\_i\^{}\{(l)\}\} \textbackslash mathcal\{J\}(W, b) =
+\textbackslash frac\{1\}\{n\} \textbackslash sum\_\{i=1\}\^{}\{n\}
+\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+b\_i\^{}\{(l)\}\} \textbackslash mathcal\{J\}(W, b; x, y) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps75.jpg}}
+
+这个公式表示对每个训练样本计算偏置的梯度，然后取平均值。
+
+\paragraph{\texorpdfstring{\textbf{2.2.8.2.2
+直观理解}}{2.2.8.2.2 直观理解}}\label{22822-ux76f4ux89c2ux7406ux89e3}
+
+给定一个训练样本 ((x,
+y))，我们首先进行一次``前向传播''来计算网络中所有节点的激活值，包括假设的输出值
+(\textbackslash hat\{y\})。
+
+然后，对于第 ( l ) 层中的每个节点 ( i )，我们需要计算一个``误差项''
+(\textbackslash delta\_i\^{}\{(l)\})，用于衡量该节点对输出错误的``责任''有多大。
+
+对于输出层的节点，我们可以直接测量网络的激活值与真实目标值之间的差异，并使用这个差异来定义
+(\textbackslash delta\_i\^{}\{(L)\})。
+
+对于隐藏层的单元，我们根据使用 ( z\_i\^{}\{(l)\} )
+作为输入的节点的误差项的加权平均值来计算
+(\textbackslash delta\_i\^{}\{(l)\})。通过这种方式，可以逐层向后传播误差，以此来调整每个层的权重，从而最小化整个网络的误差。
+
+\paragraph{\texorpdfstring{\textbf{2.2.8.3}
+\textbf{前向传播}}{2.2.8.3 前向传播}}\label{2283-ux524dux5411ux4f20ux64ad}
+
+给定一个训练样本 ((x,
+y))，我们首先进行一次``前向传播''来计算网络中所有节点的激活值，包括假设的输出值
+(\textbackslash hat\{y\})。
+
+前向传播的具体步骤如下：
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps76.jpg}}
+
+对于第一个隐藏层的节点：
+
+{[} z\_1\^{}\{(2)\} = f\textbackslash left( W\emph{\{11\}\^{}\{(1)\}
+x\_1 + W}\{12\}\^{}\{(1)\} x\_2 + W\_\{13\}\^{}\{(1)\} x\_3 +
+b\_1\^{}\{(1)\} \textbackslash right) {]}
+
+{[} z\_2\^{}\{(2)\} = f\textbackslash left( W\emph{\{21\}\^{}\{(1)\}
+x\_1 + W}\{22\}\^{}\{(1)\} x\_2 + W\_\{23\}\^{}\{(1)\} x\_3 +
+b\_2\^{}\{(1)\} \textbackslash right) {]}
+
+{[} z\_3\^{}\{(2)\} = f\textbackslash left( W\emph{\{31\}\^{}\{(1)\}
+x\_1 + W}\{32\}\^{}\{(1)\} x\_2 + W\_\{33\}\^{}\{(1)\} x\_3 +
+b\_3\^{}\{(1)\} \textbackslash right) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps77.jpg}}
+
+对于输出层的节点：
+
+{[} \textbackslash hat\{y\} = z\_1\^{}\{(3)\} = f\textbackslash left(
+W\emph{\{11\}\^{}\{(2)\} z\_1\^{}\{(2)\} + W}\{12\}\^{}\{(2)\}
+z\_2\^{}\{(2)\} + W\_\{13\}\^{}\{(2)\} z\_3\^{}\{(2)\} + b\^{}\{(2)\}
+\textbackslash right) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps78.jpg}}
+
+通过前向传播，我们计算每一层的节点激活值，再通过这些激活值计算网络的输出值
+(\textbackslash hat\{y\})。
+
+\paragraph{\texorpdfstring{\textbf{2.2.8.4}
+\textbf{输出层的误差}}{2.2.8.4 输出层的误差}}\label{2284-ux8f93ux51faux5c42ux7684ux8befux5dee}
+
+当一个训练样本 ((x, y))
+被输入到网络中，我们首先计算前向传播的结果，即计算输出值
+(\textbackslash hat\{y\})。
+
+对于每个第 ( l ) 层的节点 ( i )，我们需要计算一个``误差项''
+(\textbackslash delta\_i\^{}\{(l)\})
+来衡量该节点对于输出误差的``责任''有多大。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps79.jpg}}
+
+对于输出层的节点，我们可以直接测量网络的激活值与真实目标值之间的差异，并使用这个差异来定义
+(\textbackslash delta\_i\^{}\{(L)\})。
+
+具体来说，输出层的误差项 (\textbackslash delta\_i\^{}\{(L)\})
+的计算公式如下：
+
+{[} \textbackslash delta\_i\^{}\{L\} =
+\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+z\_i\^{}\{L\}\} \textbackslash frac\{1\}\{2\} \textbar{} y
+\textbackslash hat\{y\} \textbar{}\^{}2 = (y\_i f(z\_i\^{}\{L\}))
+\textbackslash cdot f\textquotesingle(z\_i\^{}\{L\}) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps80.jpg}}
+
+这个公式体现了输出节点的误差项是网络激活值与实际值之差，再乘以激活函数的导数。通过计算这些误差项，网络能够逐步调整参数，以减少整体误差。
+
+\paragraph{\texorpdfstring{ }{ }}
+
+\paragraph{\texorpdfstring{\textbf{2.2.8.5}
+\textbf{误差的反向传播}}{2.2.8.5 误差的反向传播}}\label{2285-ux8befux5deeux7684ux53cdux5411ux4f20ux64ad}
+
+对于输出层的节点，我们可以直接测量网络的激活值与真实目标值之间的差异，并使用这个差异来定义
+(\textbackslash delta\_i\^{}\{(L)\})。
+
+对于隐藏单元，我们将基于使用 (z\_i\^{}\{(l)\})
+作为输入的节点的误差项的加权平均值来计算
+(\textbackslash delta\_i\^{}\{(l)\})。
+
+具体来说，对于 (l = L-1, L-2, \textbackslash ldots, 2) 和第 ( l )
+层中的每个节点 (i)，其误差项的计算公式是：
+
+{[} \textbackslash delta\_i\^{}\{(l)\} = \textbackslash left(
+\textbackslash sum\emph{\{j=1\}\^{}\{s}\{l+1\}\} W\_\{ji\}\^{}\{(l)\}
+\textbackslash delta\_j\^{}\{(l+1)\} \textbackslash right)
+f\textquotesingle(z\_i\^{}\{(l)\}) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps81.jpg}}
+
+这个公式表示，第 ( l ) 层每个节点的误差项是来自下一个层（即第 ( l+1 )
+层）节点误差项的加权和，再乘以下一层节点的激活函数导数。通过这种方式，我们逐层向后传播误差，逐渐更新每一层的权重，从而优化整个网络。
+
+对于隐藏单元，我们基于使用 (z\_i\^{}\{(l)\})
+作为输入的节点的误差项的加权平均值来计算
+(\textbackslash delta\_i\^{}\{(l)\})。
+
+对于 (l = L-1, L-2, \textbackslash ldots, 2) 和第 ( l ) 层中的每个节点
+(i)，其误差项的计算公式是：
+
+{[} \textbackslash delta\_i\^{}\{(l)\} = \textbackslash left(
+\textbackslash sum\emph{\{j=1\}\^{}\{s}\{l+1\}\} W\_\{ji\}\^{}\{(l)\}
+\textbackslash delta\_j\^{}\{(l+1)\} \textbackslash right)
+f\textquotesingle(z\_i\^{}\{(l)\}) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps82.jpg}}
+
+回顾链式法则：如果 (\textbackslash mathbf\{y\} =
+g(\textbackslash mathbf\{x\})) 并且 (\textbackslash mathbf\{z\} =
+f(\textbackslash mathbf\{y\}))，则：
+
+\textbf{y}=\emph{g}(\textbf{x}) 并且 \textbf{z}=\emph{f}(\textbf{y})
+
+{[} \textbackslash frac\{\textbackslash partial
+z\}\{\textbackslash partial x\_i\} = \textbackslash sum\_j
+\textbackslash frac\{\textbackslash partial z\}\{\textbackslash partial
+y\_j\} \textbackslash frac\{\textbackslash partial
+y\_j\}\{\textbackslash partial x\_i\} {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps83.jpg}}
+
+利用链式法则，我们可以将误差从输出层逐层传播到输入层。这一步骤允许我们计算每个隐藏层神经元的误差，实现对每层权重和偏置的优化调整。
+
+\paragraph{\texorpdfstring{\textbf{2.2.8.6}
+\textbf{求导}}{2.2.8.6 求导}}\label{2286-ux6c42ux5bfc}
+
+计算所需的偏导数，如下所示：
+
+{[}
+\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+W\_\{ij\}\^{}\{(l)\}\} \textbackslash mathcal\{J\}(W, b; x, y) =
+z\_j\^{}\{(l)\} \textbackslash delta\_i\^{}\{(l+1)\} {]}
+
+{[}
+\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+b\_i\^{}\{(l)\}\} \textbackslash mathcal\{J\}(W, b; x, y) =
+\textbackslash delta\_i\^{}\{(l+1)\} {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps84.jpg}}
+
+公式展示了反向传播算法中损失函数 (J) 对权重 (W) 和偏置 (b)
+的偏导数。通过这些偏导数，可以更新神经网络的参数，使得损失函数逐步减小，从而提高模型的预测准确性。具体来看：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  损失函数对权重的偏导数
+\end{enumerate}
+
+公式：
+
+{[}
+\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+W\_\{ij\}\^{}\{(l)\}\} J(W, b; x, y) = z\_j\^{}\{(l)\}
+\textbackslash delta\_i\^{}\{(l+1)\} {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps85.jpg}}
+
+解释：
+
+(\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+W\emph{\{ij\}\^{}\{(l)\}\} J(W, b; x, y)) 表示损失函数 (J) 对第 (l)
+层神经网络中从第 (j) 个神经元到第 (i) 个神经元的权重
+(W}\{ij\}\^{}\{(l)\}) 的偏导数。
+
+(z\_j\^{}\{(l)\}) 是第 (l) 层中第 (j) 个神经元的输出。
+
+(\textbackslash delta\_i\^{}\{(l+1)\}) 是下一层（第 (l+1) 层）中第 (i)
+个神经元的误差项。
+
+这个公式表示，损失函数对权重的偏导数等于当前层神经元的输出与下一层神经元的误差项的乘积。从直觉上看，这个结果表示当前层的输出对下一个层的误差的重要性，它说明了如果当前层的输出影响了下一层，那该如何调整当前层的权重。
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  损失函数对偏置的偏导数
+\end{enumerate}
+
+公式：
+
+{[}
+\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+b\_i\^{}\{(l)\}\} J(W, b; x, y) = \textbackslash delta\_i\^{}\{(l+1)\}
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps86.jpg}}
+
+解释：
+
+(\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+b\_i\^{}\{(l)\}\} J(W, b; x, y)) 表示损失函数 (J) 对第 (l)
+层神经网络中第 (i) 个神经元的偏置 (b\_i\^{}\{(l)\}) 的偏导数。
+
+(\textbackslash delta\_i\^{}\{(l+1)\}) 是下一层（第 (l+1) 层）中第 (i)
+个神经元的误差项。
+
+这个公式表示，损失函数对某一层偏置的偏导数等于下一层中相应神经元的误差项。由于偏置
+(b)
+的偏导数不取决于特定的激活值，它只和误差项有关，这表示该偏置对于误差的贡献。
+
+反向传播深度解释
+
+在训练神经网络时，我们通过最小化某个损失函数 (J) 来优化模型的参数 (W) 和
+(b)。反向传播算法计算损失函数对每一个参数的偏导数，这些偏导数表示误差如何随每个参数的变化而变化。通过这些偏导数，使用梯度下降或者其他优化算法，逐步更新参数以减少损失。
+
+具体步骤如下：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  前向传播：计算每一层的激活值，最终计算损失。
+\item
+  反向传播：从输出层开始，逐层向后计算每一层的误差项。
+\item
+  计算梯度：根据误差项计算损失对权重和偏置的偏导数。
+\item
+  参数更新：使用计算得到的梯度，按梯度下降法等优化算法更新权重和偏置。
+\end{enumerate}
+
+所以，这两个公式是反向传播过程中关键的步骤。在反向传播时，利用这些公式更新每一层的权重和偏置，使得下一次前向传播时模型的预测更精确，逐步优化模型。
+
+将其代入：
+
+{[}
+\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+W\emph{\{ij\}\^{}\{(l)\}\} \textbackslash mathcal\{J\}(W, b) =
+\textbackslash left{[} \textbackslash frac\{1\}\{n\}
+\textbackslash sum}\{i=1\}\^{}\{n\}
+\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+W\emph{\{ij\}\} \textbackslash mathcal\{J\}(W, b; x, y)
+\textbackslash right{]} + \textbackslash lambda W}\{ij\}\^{}\{(l)\} {]}
+
+{[}
+\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+b\_i\^{}\{(l)\}\} \textbackslash mathcal\{J\}(W, b) =
+\textbackslash frac\{1\}\{n\} \textbackslash sum\_\{i=1\}\^{}\{n\}
+\textbackslash frac\{\textbackslash partial\}\{\textbackslash partial
+b\_i\} \textbackslash mathcal\{J\}(W, b; x, y) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps87.jpg}}
+
+这些公式表示我们可以通过计算每个训练样本的梯度，然后取平均值，并结合正则化项来更新神经网络的参数。这个过程在反向传播中高效地进行，使得神经网络能够在训练过程中持续优化。
+
+\paragraph{\texorpdfstring{\textbf{2.2.8.7}
+\textbf{总结（伪代码）}}{2.2.8.7 总结（伪代码）}}\label{2287-ux603bux7ed3ux4f2aux4ee3ux7801}
+
+反复执行以下步骤：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  初始化 (\textbackslash Delta W\textquotesingle{}) 和
+  (\textbackslash Delta b\textquotesingle{}) 为 0 对于所有层 (l)：
+\end{enumerate}
+
+Δ\emph{W}′ 和 Δ\emph{b}′
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  对于 (i = 1) 到 (n)：
+\end{enumerate}
+
+执行前向传播；
+
+使用反向传播计算每层的误差；
+
+计算损失函数 (\textbackslash mathcal\{J\}(W, b; x, y)) 相对于权重
+((\textbackslash nabla\_w \textbackslash mathcal\{J\}(W, b; x, y)))
+和偏置 ((\textbackslash nabla\_b \textbackslash mathcal\{J\}(W, b; x,
+y))) 的偏导数；
+
+（计算损失函数 J(\emph{W},\emph{b};\emph{x},\emph{y}) 相对于权重
+(∇\emph{w} J(\emph{W},\emph{b};\emph{x},\emph{y})) 和偏置 (∇\emph{b}
+J(\emph{W},\emph{b};\emph{x},\emph{y})) 的偏导数）
+
+更新累积梯度：
+
+{[}
+
+\textbackslash Delta W\textquotesingle{} := \textbackslash Delta
+W\textquotesingle{} + \textbackslash nabla\_w
+\textbackslash mathcal\{J\}(W, b; x, y)
+
+{]}
+
+{[}
+
+\textbackslash Delta b\textquotesingle{} := \textbackslash Delta
+b\textquotesingle{} + \textbackslash nabla\_b
+\textbackslash mathcal\{J\}(W, b; x, y)
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps88.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  更新参数：
+\end{enumerate}
+
+{[}
+
+W\textquotesingle{} = W\textquotesingle{} \textbackslash alpha
+\textbackslash left{[} \textbackslash left(
+\textbackslash frac\{1\}\{n\} \textbackslash Delta W\textquotesingle{}
+\textbackslash right) + \textbackslash lambda W\textquotesingle{}
+\textbackslash right{]}
+
+{]}
+
+{[}
+
+b\textquotesingle{} = b\textquotesingle{} \textbackslash alpha
+\textbackslash left( \textbackslash frac\{1\}\{n\} \textbackslash Delta
+b\textquotesingle{} \textbackslash right)
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps89.jpg}}
+
+重复以上步骤直到收敛为止。这一过程不断调整网络参数，以最小化损失函数，从而提高模型性能。
+
+\paragraph{\texorpdfstring{\textbf{2.2.8.8}
+\textbf{问题：反向传播的常见局限性是什么？}}{2.2.8.8 问题：反向传播的常见局限性是什么？}}\label{2288-ux95eeux9898ux53cdux5411ux4f20ux64adux7684ux5e38ux89c1ux5c40ux9650ux6027ux662fux4ec0ux4e48}
+
+A. 局部极小值问题
+
+B. 收敛速度慢
+
+C. 对噪声数据敏感
+
+D. 以上全部
+
+反向传播算法在神经网络训练中的确面临一些局限性。局部极小值问题使得算法可能会陷入非全局最优解，导致模型性能不佳。收敛速度慢会使训练时间过长，特别是在大型数据集和复杂模型中。此外，反向传播对噪声数据非常敏感，噪声数据会影响模型的准确性和稳定性。综合来看，这些限制在一定程度上会影响反向传播算法的效率和效果。正确答案是D.
+以上全部。
+
+\subsubsection{\texorpdfstring{\textbf{2.2.9
+激活函数}}{2.2.9 激活函数}}\label{229-ux6fc0ux6d3bux51fdux6570}
+
+\paragraph{\texorpdfstring{\textbf{2.2.9.1}
+\textbf{为什么我们需要激活函数？}}{2.2.9.1 为什么我们需要激活函数？}}\label{2291-ux4e3aux4ec0ux4e48ux6211ux4eecux9700ux8981ux6fc0ux6d3bux51fdux6570}
+
+我们使用激活函数来模拟神经元的激活和非激活两种状态。这些函数将输入信号转换为输出信号，使神经网络能够捕捉复杂的非线性关系。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps90.jpg}}
+
+举例来说，在生物神经元中，信号通过树突传递到细胞体，然后通过轴突传输出去。类似地，在人工神经网络中，输入信号经过加权求和后传递到激活函数，再将输出信号传递到下一层神经元。
+
+激活函数可以是非线性的，例如ReLU、sigmoid或tanh。非线性激活函数使得网络能够更好地表示复杂的数据模式和特征，增强网络的表达能力。
+
+总之，激活函数在神经网络中起着关键作用，模拟生物神经元的行为，并通过非线性变换提升网络的表现力。
+
+\paragraph{\texorpdfstring{\textbf{2.2.9.2}
+\textbf{激活函数}}{2.2.9.2 激活函数}}\label{2292-ux6fc0ux6d3bux51fdux6570}
+
+隐藏单元的激活函数设计是一个极其活跃的研究领域。常见的激活函数包括：
+
+逻辑Sigmoid函数（Logistic Sigmoid）
+
+双曲正切函数（Hyperbolic Tangent）
+
+修正线性单元（Rectified Linear Units, ReLU）
+
+广义修正线性单元（Generalized Rectified Linear Units, GELU）
+
+门控线性单元（Gated Linear Units, GLU）
+
+Maxout单元（Maxout Units）
+
+这些激活函数通过不同的方式处理输入信号，赋予神经网络以非线性变换的能力，从而提高网络的表达能力和学习复杂模式的能力。
+
+\subparagraph{\texorpdfstring{\textbf{2.2.9.2.1} \textbf{逻辑 Sigmoid
+函数}}{2.2.9.2.1 逻辑 Sigmoid 函数}}\label{22921-ux903bux8f91-sigmoid-ux51fdux6570}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps91.jpg}}
+
+( g(z) = \textbackslash sigma(z)
+)。\emph{g}(\emph{z})=\emph{σ}(\emph{z}) 它也用于输出单元。
+
+逻辑 Sigmoid 激活函数，Sigmoid
+单元在其大部分区域内都会饱和，这可能使基于梯度的学习变得非常困难。
+
+循环网络、许多概率模型和一些自动编码器有其他要求，这些要求排除了分段线性激活函数的使用，尽管饱和存在缺点，但使
+Sigmoid 单元更具吸引力。
+
+\subparagraph{\texorpdfstring{\textbf{2.2.9.2.2}
+\textbf{双曲正切函数}}{2.2.9.2.2 双曲正切函数}}\label{22922-ux53ccux66f2ux6b63ux5207ux51fdux6570}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps92.jpg}}
+
+( g(z) = \textbackslash tanh(z) = 2\textbackslash sigma(2z) 1 )。
+
+\emph{g}(\emph{z})=tanh(\emph{z})=2\emph{σ}(2\emph{z})−1。
+
+双曲正切激活函数通常比逻辑 Sigmoid 函数表现更好。
+
+因为 (\textbackslash tanh) 在接近 0 时类似于恒等函数，模型
+(\textbackslash hat\{y\} = w\^{}T \textbackslash tanh(U\^{}T
+\textbackslash tanh(V\^{}T x)))
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps93.jpg}}
+
+类似于训练一个线性模型 (\textbackslash hat\{y\} = w\^{}T U\^{}T V\^{}T
+x)
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps94.jpg}}
+
+，只要网络激活保持较小。这使得训练 (\textbackslash tanh) 网络更加容易。
+
+\subparagraph{\texorpdfstring{\textbf{2.2.9.2.3}
+\textbf{修正线性单元ReLU}}{2.2.9.2.3 修正线性单元ReLU}}\label{22923-ux4feeux6b63ux7ebfux6027ux5355ux5143relu}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps95.jpg}}
+
+修正线性单元是隐层单元的一个优秀的默认选择（Nair\&Hinton, 2010）。
+
+激活函数 ReLU（修正线性单元）：ReLU(z) = max\{z, 0\}。
+
+修正线性函数的二阶导数几乎处处为 0，而一阶导数为 1。
+
+因此，梯度方向比引入二阶效应的激活函数更有利于学习。修正线性单元及其推广基于一个原则：如果模型的行为更接近线性，优化将更容易。
+
+\subparagraph{\texorpdfstring{\textbf{2.2.9.2.4}
+\textbf{广义修正线性单元}}{2.2.9.2.4 广义修正线性单元}}\label{22924-ux5e7fux4e49ux4feeux6b63ux7ebfux6027ux5355ux5143}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps96.jpg}}
+
+ReLU
+的一个缺点是，当它们的激活值为零时，无法通过基于梯度的方法进行学习。
+
+ReLU 的推广形式 gReLU(z) = max\{z, 0\} + α min\{z, 0\}
+
+Leaky-ReLU(z) = max\{z, 0\} + 0.01 min\{z, 0\}
+
+Parametric-ReLU(z): 参数 α 是可学习的
+
+它用于图像的目标识别，当输入光照极性反转时，寻求不变特征是有意义的。
+
+\subparagraph{\texorpdfstring{\textbf{2.2.9.2.5} \textbf{门控线性单元
+(GLU)}}{2.2.9.2.5 门控线性单元 (GLU)}}\label{22925-ux95e8ux63a7ux7ebfux6027ux5355ux5143-glu}
+
+输入被分成两部分：一部分进行线性变换，另一部分通过门控机制。
+
+GLU(x, W, V, b, c) = σ(xW + b) ⊗ (xV + c)
+
+这种机制允许模型动态调节信息的流动。
+
+Sigmoid 可以被 GELU 或 Swish 函数替代。
+
+GeGLU(x, W, V, b, c) = GELU(xW + b) ⊗ (xV + c)
+
+SwiGLU(x, W, V, b, c) = Swish(xW + b) ⊗ (xV + c)
+
+\subparagraph{\texorpdfstring{\textbf{2.2.9.2.6} \textbf{Maxout
+单元}}{2.2.9.2.6 Maxout 单元}}\label{22926-maxout-ux5355ux5143}
+
+Maxout 单元进一步推广了修正线性单元。与其应用逐元素的函数 ( g(z)
+)，Maxout 单元将 ( z ) 划分为 ( k ) 个值的组。这些组之一为：
+
+( g(z)\emph{i = \textbackslash max}\{j \textbackslash in G\^{}\{(i)\}\}
+z\_j )
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps97.jpg}}
+
+其中 ( G\^{}\{(i)\} ) 是组 ( i ) 的输入索引集合，即 (\{(i-1)k+1, ...,
+ik\})。
+
+\{(\emph{i}−1)\emph{k}+1,...,\emph{ik}\}
+
+Maxout 单元可以学习一个最多由 ( k ) 段组成的分段线性凸函数。因此，Maxout
+单元可视为学习激活函数本身而不仅仅是单元之间的关系。
+
+Maxout 单元
+
+在卷积网络中，可以通过对 ( k )
+个仿射特征图进行求最大值（即跨通道池化）构建一个 Maxout 特征图。
+
+一个单一的 Maxout 单元可以逼近任意凸函数。图中展示了 Maxout
+在一维输入下的表现。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps98.jpg}}
+
+\paragraph{\texorpdfstring{\textbf{2.2.9.3 问题: DNN 和 逻辑回归
+之间的关系是什么？}}{2.2.9.3 问题: DNN 和 逻辑回归 之间的关系是什么？}}\label{2293-ux95eeux9898-dnn-ux548c-ux903bux8f91ux56deux5f52-ux4e4bux95f4ux7684ux5173ux7cfbux662fux4ec0ux4e48}
+
+提示: 考虑 Sigmoid 激活函数。
+
+逻辑回归是神经网络的一种特殊情况。当以下条件满足时，一个 DNN
+等价于逻辑回归：
+
+仅前馈
+
+无隐藏层
+
+Sigmoid/Softmax 激活
+
+交叉熵损失
+
+\paragraph{\texorpdfstring{\textbf{2.2.9.4
+架构考虑}}{2.2.9.4 架构考虑}}\label{2294-ux67b6ux6784ux8003ux8651}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps99.jpg}}
+
+图6.6：实验证据表明，当用于从地址照片中转录多位数字时，较深的网络具有更好的泛化能力。数据来自
+Goodfellow
+等人（2014年）。随着深度的增加，测试集的准确率稳定提升。参见图6.7以了解一个对照实验，该实验表明模型规模的其他增加并不产生相同的效果。
+
+架构考虑
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps100.jpg}}
+
+浅层模型在大约2000万个参数时出现过拟合，而深层模型在拥有超过6000万个参数时仍能受益。
+
+这表达了一种信念，即函数应该由许多简单函数组合而成。
+
+这可能会导致学习到由简单表示组合而成的表示（例如，用边缘定义的角点）。
+
+或者学习到一个具有顺序依赖步骤的程序（例如，首先定位一组对象，然后将它们相互分割，然后识别它们）。
+
+\paragraph{\texorpdfstring{\textbf{2.2.9.5}
+\textbf{训练不稳定性}}{2.2.9.5 训练不稳定性}}\label{2295-ux8badux7ec3ux4e0dux7a33ux5b9aux6027}
+
+随着模型层数加深，在反向传播过程中梯度可能呈指数级增长，这会导致训练不稳定并导致模型崩溃。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps101.jpg}}
+
+\paragraph{\texorpdfstring{\textbf{2.2.9.6}
+\textbf{稳定的隐藏状态：归一化}}{2.2.9.6 稳定的隐藏状态：归一化}}\label{2296-ux7a33ux5b9aux7684ux9690ux85cfux72b6ux6001ux5f52ux4e00ux5316}
+
+归一化是将神经网络中输入数据或中间激活值调整到标准范围的过程。
+
+它通过减少内部协变量偏移，帮助稳定和加速训练过程。
+
+公式:
+
+( \textbackslash hat\{x\} = \textbackslash frac\{x
+\textbackslash mu\_B\}\{\textbackslash sqrt\{\textbackslash sigma\_B\^{}2
++ \textbackslash epsilon\}\} )
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps102.jpg}}
+
+归一化方法
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps103.jpg}}
+
+\subsubsection{\texorpdfstring{\textbf{2.2.10}
+\textbf{高级架构}}{2.2.10 高级架构}}\label{2210-ux9ad8ux7ea7ux67b6ux6784}
+
+Perceptron（1958年）：由Frank Rosenblatt发明。
+
+Hopfield Network（1982年）：提出了递归和反馈机制。
+
+Neocognitron（1980年）：引入卷积和池化操作。
+
+BPNN/MLP（1986年）：建立在多层感知器（MLP）的基础上。
+
+RNN/LSTM（1997年）：用于处理序列数据，特别是语音识别（2013年）。
+
+Neural Probabilistic Language Model（2003年）：在语言模型中取得突破。
+
+LeNet/CNN（1998年）：Yann Lecun开发的卷积神经网络（CNN）。
+
+Deep Q-learning（2013年）：在强化学习中表现出色。
+
+AutoEncoder（1989/2006年）：利用编码和解码器进行无监督学习。Denoising
+Autoencoder（2008年）是其扩展。
+
+word2Vec（2013年）：在词嵌入方面取得重要进展。
+
+Seq2Seq（2014年）：用于序列到序列的学习任务。
+
+GAN（2014年）：生成对抗网络。它由生成器网络（试图通过生成来欺骗鉴别器
+
+真正的图片）和鉴别器网络（尝试区分真假图像）组成，训练好这个网络需要联合训练一个minima
+game的优化问题：
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps104.jpg}}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps105.png}}
+
+判别器的目标是最大化目标函数，使得对于真实数据x，判别器的输出D(x)接近1（表示真实），而对于生成的假数据G(z)，判别器的输出D(G(z))接近0（表示假）。相反，生成器的目标是最小化目标函数，使得D(G(z))接近1，从而欺骗判别器认为生成的数据是真实的。
+
+VAE（2013年）：变分自编码器。DCGAN（2014年），WGAN（2017年），PGGAN（2017年）进一步扩展了GAN的应用。
+
+ResNet（2016年）：深度残差网络，解决了深度网络的梯度消失问题。DenseNet（2017年）进一步改进。
+
+AlphaGo（2016年）和 Alpha Zero（2017年）：在人工智能游戏中表现优异。
+
+Capsule Nets（2017年）：提高了图像分类的精度和效率。
+
+这些架构和模型代表了神经网络和深度学习领域的重大进展。
+
+\paragraph{\texorpdfstring{\textbf{2.2.10.1*}*当今的神经网络结构**}{2.2.10.1**当今的神经网络结构**}}\label{22101ux5f53ux4ecaux7684ux795eux7ecfux7f51ux7edcux7ed3ux6784}
+
+通常，一个深度神经网络是由多个模块层堆叠而成的。
+
+基本模块包括：MLP 模块、CNN 模块、Attention 模块、RNN 模块等。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps106.jpg}}
+
+MLP： 多层感知器（MLP，Multilayer Perceptron）
+
+简单且灵活，可以逼近任意函数
+
+对于高维输入效率低下，易于过拟合
+
+CNN：
+
+优秀的捕捉局部空间模式，并使用较少的参数。主要用于图像任务。
+
+对长程依赖处理较差，不适用于非结构化数据。
+
+Attention block：
+
+高效捕捉长程依赖性，并能适应多种数据类型。
+
+计算开销较大。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps107.jpg}}
+
+示例: UNet（稳定扩散版本）
+
+在每个分辨率下：N * CNN 模块 + M *（注意力模块 + MLP 模块）
+
+生成任务的一些技巧：长残差连接
+
+\subsubsection{\texorpdfstring{\textbf{2.2.11
+总结}}{2.2.11 总结}}\label{2211-ux603bux7ed3}
+
+深度前馈网络是人工神经网络中最基础最常见的一种类型。它由一系列全连接层组成，每层的神经元与下一层的神经元全部连接。数据在网络中单向传递，从输入层经过隐藏层直到输出层，称为前馈网络。
+
+深度前馈网络的结构和工作原理如下：
+
+首先是输入层，负责接收原始数据。输入层的神经元数目等于输入数据的维度。然后是隐藏层，在输入层和输出层之间可能存在一个或多个隐藏层，隐藏层越多，网络越``深''，提取特征的能力就越强。每个隐藏层由多个神经元组成，这些神经元通过激活函数（如ReLU、tanh、sigmoid）对输入信号进行非线性变换。最后是输出层，负责将隐藏层的输出转换为最终的预测结果。输出层的神经元数目取决于具体任务，例如，对于二分类任务，输出层通常有一个神经元（通过sigmoid激活函数），而对于多分类任务，输出层的神经元数目等于类别数（通过softmax激活函数）。
+
+前馈网络的数据流动过程称为前向传播。具体步骤如下：首先，输入数据通过输入层传递到第一个隐藏层，然后每个隐藏层的输出通过激活函数计算，结果作为下一个隐藏层的输入，最后一个隐藏层的输出通过输出层计算，得到最终的预测结果。
+
+为了训练前馈网络，需要通过监督学习调整网络的权重，这个过程称为反向传播。反向传播的步骤包括：首先，计算损失函数，使用预测结果和实际标签计算损失（如均方误差、交叉熵等）。然后计算损失的梯度，即计算损失函数关于每个权重的导数（梯度）。接着，使用梯度下降方法（如随机梯度下降，SGD）更新每个权重，以最小化损失函数。
+
+深度前馈网络在许多应用中表现出色，包括图像分类、语音识别、自然语言处理和推荐系统。其主要优势包括表达能力强，通过多个隐藏层，前馈网络能够表示复杂的非线性关系；通用性，适用于各种类型的数据和任务，只需相应调整网络结构和损失函数；可扩展性，通过增加层数和神经元数目，可以提升模型的表达能力和性能。
+
+总之，深度前馈网络是深度学习中最基础也是最重要的模型之一。理解其架构和工作原理是学习其他复杂模型（如卷积神经网络、循环神经网络和生成对抗网络）的重要基础。
+
+\subsection{\texorpdfstring{\textbf{2.3
+卷积神经网络}}{2.3 卷积神经网络}}\label{23-ux5377ux79efux795eux7ecfux7f51ux7edc}
+
+\subsubsection{\texorpdfstring{\textbf{2.3.1}
+\textbf{机器如何识别我们的面孔？}}{2.3.1 机器如何识别我们的面孔？}}\label{231-ux673aux5668ux5982ux4f55ux8bc6ux522bux6211ux4eecux7684ux9762ux5b54}
+
+清华校园的天猫超市
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps108.jpg}}
+
+\subsubsection{\texorpdfstring{\textbf{2.3.2}
+\textbf{计算机视觉任务}}{2.3.2 计算机视觉任务}}\label{232-ux8ba1ux7b97ux673aux89c6ux89c9ux4efbux52a1}
+
+图像：标注图像中的对象如人、羊、狗。
+
+目标检测：识别并标记图像中的对象，并框出对象的位置。
+
+语义分割：将图像中的每个像素分类，如人、羊、狗等。
+
+图像生成：根据输入生成新图像。
+
+\paragraph{\texorpdfstring{\textbf{2.3.2.1 用于视觉的
+MLP？}}{2.3.2.1 用于视觉的 MLP？}}\label{2321-ux7528ux4e8eux89c6ux89c9ux7684-mlp}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps109.jpg}}
+
+输入图像尺寸为 372x372。
+
+输入数据采用多层感知器（MLP）处理。
+
+隐藏层数量 ( k )：
+
+第一层：α × 138,384
+
+第二层：β × 138,384
+
+第三层：γ × 138,384
+
+对于识别别墅的结果：``是别墅'' 或 ``不是别墅''。
+
+问题：
+
+空间信息丢失。
+
+参数爆炸。
+
+难以适应视点变化、尺度变化、光照条件等场景。
+
+\paragraph{\texorpdfstring{\textbf{2.3.2.2
+目标检测}}{2.3.2.2 目标检测}}\label{2322-ux76eeux6807ux68c0ux6d4b}
+
+问题：图片中有多少只猫？
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps110.jpg}}
+
+10只猫
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps111.jpg}}
+
+\paragraph{\texorpdfstring{\textbf{2.3.2.3 2D
+卷积}}{2.3.2.3 2D 卷积}}\label{2323-2d-ux5377ux79ef}
+
+通过卷积可以进行边缘检测。卷积操作包括将一个小的核（或过滤器）与输入图像的不同区域进行点积。右侧的例子展示了如何使用一个简单的核进行边缘检测。输入图像通过卷积操作生成输出图像，突显了图像中的边缘。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps112.jpg}}
+
+\subsubsection{\texorpdfstring{\textbf{2.3.3}
+\textbf{大脑神经科学}}{2.3.3 大脑神经科学}}\label{233-ux5927ux8111ux795eux7ecfux79d1ux5b66}
+
+大脑皮层中的拓扑映射：皮层中相邻的细胞代表视觉场中相邻的区域。
+
+简单细胞：对光的方向有反应
+
+复杂细胞：对光的方向和运动有反应
+
+超复杂细胞：对运动及其终点有反应
+
+视觉刺激通过视网膜神经节细胞感受野传导至 LGN 和 V1
+的简单细胞，形成对应的反应模式。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps113.jpg}}
+
+\subsubsection{\texorpdfstring{\textbf{2.3.4}
+\textbf{概述}}{2.3.4 概述}}\label{234-ux6982ux8ff0}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps114.jpg}}
+
+扫描图像：输入图像通过扫描得到。
+
+生成特征层次结构：图像经过每一层的处理，提取并生成多层次的特征。
+
+从高层特征中识别：最终通过高层次特征进行识别和分类。
+
+\paragraph{\texorpdfstring{ }{ }}\label{-2}
+
+\paragraph{\texorpdfstring{\textbf{2.3.4.1}
+\textbf{想法1：局部连接}}{2.3.4.1 想法1：局部连接}}\label{2341-ux60f3ux6cd51ux5c40ux90e8ux8fdeux63a5}
+
+局部性假设：局部信息足以进行识别。
+
+只将每个神经元连接到输入体积中的局部区域。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps115.jpg}}
+
+\paragraph{\texorpdfstring{\textbf{2.3.4.2}
+\textbf{想法2：参数共享}}{2.3.4.2 想法2：参数共享}}\label{2342-ux60f3ux6cd52ux53c2ux6570ux5171ux4eab}
+
+平移不变性假设：如果某个特征在空间位置 ((x, y))
+处是有用的，那么它在其他位置 ((x\textquotesingle, y\textquotesingle))
+处也应该是有用的。
+
+在不同的空间位置上共享滑动窗口的权重。
+
+\paragraph{\texorpdfstring{\textbf{2.3.4.3}
+\textbf{什么是卷积？}}{2.3.4.3 什么是卷积？}}\label{2343-ux4ec0ux4e48ux662fux5377ux79ef}
+
+在数学中，卷积是对两个函数（(f) 和 (g)）的操作。
+
+{[}
+
+(f * g)(t) =
+\textbackslash int\_\{-\textbackslash infty\}\^{}\{\textbackslash infty\}
+f(\textbackslash tau) g(t \textbackslash tau) \textbackslash,
+d\textbackslash tau
+
+{]}
+
+{[}
+
+=
+\textbackslash int\_\{-\textbackslash infty\}\^{}\{\textbackslash infty\}
+f(t \textbackslash tau) g(\textbackslash tau) \textbackslash,
+d\textbackslash tau
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps116.jpg}}
+
+对于定义在整数集合 (\textbackslash mathbb\{Z\}) 上的函数 (f) 和
+(g)，我们可以定义它们的离散卷积：
+
+{[}
+
+(f * g)(n) =
+\textbackslash sum\_\{m=-\textbackslash infty\}\^{}\{\textbackslash infty\}
+f{[}m{]} g{[}n m{]}
+
+{]}
+
+{[}
+
+=
+\textbackslash sum\_\{m=-\textbackslash infty\}\^{}\{\textbackslash infty\}
+f{[}n m{]} g{[}m{]}
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps117.jpg}}
+
+假设我们正在使用 GPS 估计位置。( f{[}n{]} ) 是来自 GPS
+的值，但可能带有噪声。
+
+为了获得更少噪声的估计，我们可以使用最近的 GPS 值，并使用加权函数 (
+g{[}m{]} ) 进行平滑估计，当然最近的值应该有更高的权重。
+
+{[}
+
+(f * g)(n) =
+\textbackslash sum\_\{m=-\textbackslash infty\}\^{}\{\textbackslash infty\}
+f{[}m{]} g{[}n m{]}
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps118.jpg}}
+
+假设 f{[}n{]} 是一个包含噪声的 GPS 位置数据序列。在时间 n
+处，它的值可能是：
+
+f{[}−1{]},f{[}0{]},f{[}1{]},f{[}2{]},\ldots{}
+
+假设我们选择 g{[}m{]} 为平滑加权函数，比如一个简单的三点平均：
+
+g{[}m{]}={[}0.2,0.5,0.3{]}
+
+这个加权函数让最近值（中心）有更大的权重。则计算 (f∗g)(n) 在时间 n
+处的具体步骤是：
+
+(f∗g)(n)=0.3⋅f{[}n−1{]}+0.5⋅f{[}n{]}+0.2⋅f{[}n+1{]}通过这样的方式，我们对时间点
+n 处的 GPS
+数据进行平滑，利用了它周围的点并进行了加权，使位置估计更平滑、更准确。
+
+在机器学习中，输入通常形成多维结构。例如，卷积用于将二维输入 (I)
+与二维卷积核 (K) 进行变换：
+
+{[}
+
+Z(i,j) = (I * K)(i,j) = \textbackslash sum\_m \textbackslash sum\_n
+I(m,n) K(i m, j n)
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps119.jpg}}
+
+在机器学习中，基于卷积的学习算法使用翻转卷积核会学习到相对于不翻转的卷积核的翻转版本。
+
+因此，在很多机器学习中的卷积变为：
+
+{[}
+
+Z(i,j) = (I * K)(i,j) = \textbackslash sum\_m \textbackslash sum\_n I(i
++ m, j + n) K(m,n)
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps120.jpg}}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps121.jpg}}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps122.jpg}}
+
+输入体积为 32x32x3。
+
+过滤器（核）大小为 5x5x3。
+
+每个神经元的输出：
+
+卷积是过滤器和一个小的 5x5x3 体积块之间的点积。
+
+卷积运算表示为：
+
+{[}
+
+S(w, h) = (I * K)(w, h) = \textbackslash sum\emph{\{i=1\}\^{}\{k\}
+\textbackslash sum}\{j=1\}\^{}\{k\} I(w+i, h+j) K(i, j)
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps123.jpg}}
+
+\subparagraph{\texorpdfstring{\textbf{2.3.4.3.1
+步幅（Stride）}}{2.3.4.3.1 步幅（Stride）}}\label{23431-ux6b65ux5e45stride}
+
+在某些情况下，我们希望减少空间分辨率（对输出进行下采样）。
+
+步幅是在每个通道的空间维度上执行的。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps124.jpg}}
+
+\subparagraph{\texorpdfstring{\textbf{2.3.4.3.2
+填充（Padding）}}{2.3.4.3.2 填充（Padding）}}\label{23432-ux586bux5145padding}
+
+可能无法适配？例如，无法在步幅为3的7x7输入上应用3x3滤波器。
+
+多层卷积会减少空间尺寸 (W \textbackslash times H) 并减少边界上的信息。
+
+通过添加 (P) 圈的零到原始地图外部，可以使用以下公式计算新的高度和宽度：
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps125.jpg}}
+
+{[}
+
+\textbackslash text\{height\}\_\{\textbackslash text\{new\}\} =
+\textbackslash left\textbackslash lceil
+\textbackslash frac\{\textbackslash text\{height\}
+\textbackslash text\{filter\} + 2 \textbackslash times
+\textbackslash text\{pad\}\}\{\textbackslash text\{stride\}\}
+\textbackslash right\textbackslash rceil + 1
+
+{]}
+
+{[}
+
+\textbackslash text\{width\}\_\{\textbackslash text\{new\}\} =
+\textbackslash left\textbackslash lceil
+\textbackslash frac\{\textbackslash text\{width\}
+\textbackslash text\{filter\} + 2 \textbackslash times
+\textbackslash text\{pad\}\}\{\textbackslash text\{stride\}\}
+\textbackslash right\textbackslash rceil + 1
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps126.jpg}}
+
+\subparagraph{\texorpdfstring{\textbf{2.3.4.3.3
+膨胀卷积}}{2.3.4.3.3 膨胀卷积}}\label{23433-ux81a8ux80c0ux5377ux79ef}
+
+膨胀卷积支持感受野的指数扩展，而不会损失分辨率或覆盖范围。展示了3x3的1膨胀卷积、2膨胀卷积和4膨胀卷积如何在更大区域内捕获信息。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps127.jpg}}
+
+膨胀卷积是一种卷积操作，它通过在常规卷积核之间插入空洞（即不连续的像素）来扩大感受野。膨胀卷积的优势在于，它能够在不增加计算复杂度的情况下捕捉更大范围的上下文信息，而不会丢失细节信息。
+
+具体来说：
+
+1膨胀卷积：这是标准的3x3卷积，其中每个滤波器元素都是相邻的像素。感受野大小为3x3。
+
+2膨胀卷积：在每个滤波器元素之间插入一个空洞，即跳过一个像素。这样，感受野大小为5x5，但实际上只计算了3x3的元素。
+
+4膨胀卷积：在每个滤波器元素之间插入三个空洞，即跳过三个像素。感受野大小为9x9，但实际上只计算了3x3的元素。
+
+通过这种方式，膨胀卷积允许感受野在指数级扩展，从而在更多的空间维度上捕获特征，而无需进行很多次平移操作。这在处理需要捕获长距离依赖关系的任务（如图像分割或语义分割）中特别有用。
+
+\subparagraph{\texorpdfstring{\textbf{2.3.4.3.4}
+\textbf{卷积：公式}}{2.3.4.3.4 卷积：公式}}\label{23434-ux5377ux79efux516cux5f0f}
+
+在处理图像时，我们通常将输入 ( I ) 和输出 ( Z )视为3D张量：
+
+{[}
+
+Z\emph{\{j,k\}\^{}\{(i)\} = \textbackslash sum}\{l,m,n\} I\emph{\{j+m-1,
+k+n-1\}\^{}\{(l)\} K}\{m,n\}\^{}\{(i,l)\} + b\^{}\{(i)\}
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps128.jpg}}
+
+( Z\_\{j,k\}\^{}\{(i)\} ) 是第 ( i ) 通道中位于第 ( j ) 行和第 ( k )
+列的输出单元的值。
+
+卷积核 ( k ) 是一个4D张量，其元素 ( K\_\{m,n\}\^{}\{(i,l)\} ) 表示第 ( l
+) 通道的输入单元与第 ( i ) 通道的输出单元之间的连接强度，行之间偏移量为
+( m )，列之间偏移量为 ( n )。
+
+为了减少计算成本，我们可以跳过卷积核的一些位置：
+
+{[}
+
+Z\emph{\{j,k\}\^{}\{(i)\} = \textbackslash sum}\{l,m,n\} I\emph{\{(j-1)
+\textbackslash times s + m, (k-1) \textbackslash times s +
+n\}\^{}\{(l)\} K}\{m,n\}\^{}\{(i,l)\} + b\^{}\{(i)\}
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps129.jpg}}
+
+( s ) 是此下采样卷积的步幅。
+
+假设我们要最小化某个损失函数 ( J(K, b) )。
+
+\paragraph{\texorpdfstring{\textbf{2.3.4.4
+池化}}{2.3.4.4 池化}}\label{2344-ux6c60ux5316}
+
+一个卷积层由多个阶段组成：
+
+卷积层（阶段）
+
+{[}
+
+Z\emph{\{j,k\}\^{}\{(i)\} = \textbackslash sum}\{l,m,n\} I\emph{\{j+m-1,
+k+n-1\}\^{}\{(l)\} K}\{m,n\}\^{}\{(i,l)\}
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps130.jpg}}
+
+非线性层（阶段）
+
+{[}
+
+O = f\textbackslash left(\textbackslash sum\_\{i\} X\_i K\_i +
+b\textbackslash right)
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps131.jpg}}
+
+池化层（阶段）
+
+池化（Pooling）是一种用来简化输出的方法，通过将某一位置附近的输出用统计值来代替该位置的输出。池化函数种类包括：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  最大池化（Max pooling）
+\item
+  平均池化（Average pooling）
+\item
+  L2-正则池化（L2-norm pooling）
+\item
+  概率加权池化（Probability weighted pooling）
+\end{enumerate}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps132.jpg}}
+
+图示解释了最大池化的过程：采用2×2的滤波器和步幅为2的设置，将原矩阵中的局部区域最大值抽取出来，形成一个新的矩阵。具体示例如下：
+
+原矩阵：
+
+```
+
+1 1 2 4
+
+5 6 7 8
+
+3 2 1 0
+
+1 2 3 4
+
+```
+
+经过2×2滤波器最大池化后的新矩阵：
+
+```
+
+6 8
+
+3 4
+
+```
+
+池化（Pooling）的特性包括：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  对输入的小幅平移具有不变性（invariance to small
+  translations）。这意味着即使输入发生了微小的变动，池化层的输出也不会有显著变化，从而提升模型的鲁棒性。
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  提高统计效率（statistical
+  efficiency）并减少内存需求。池化通过减少数据的空间维度，使得模型能够更高效地处理数据，降低计算资源的占用及内存需求。
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  减少下一层的输入处理量以及处理不同大小的输入（handle inputs of
+  variable
+  size）。池化层将输入压缩为较小的尺寸，使得之后的层能够处理更少的数据，同时便于处理不同大小的输入，提高模型的灵活性。
+\end{enumerate}
+
+\paragraph{\texorpdfstring{\textbf{2.3.4.5}
+\textbf{全连接层}}{2.3.4.5 全连接层}}\label{2345-ux5168ux8fdeux63a5ux5c42}
+
+卷积层和池化层可以被看作是具有无限强先验的一种全连接层。
+
+这种先验指的是，对于其中一个隐藏神经元的权重，必须与其相邻的隐藏神经元的权重相同，但在空间中有所平移。
+
+换句话说，除了分配给该隐藏神经元的小区域外，其他位置的权重必须为零。
+
+同样，池化的使用也是一种无限强的先验，这个先验认为每个单元应该对小幅平移保持不变。
+
+我们可以以比较简单易懂的方式来解释卷积和池化的原理：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  卷积层：可以把卷积层想象成一种特殊的全连接层。全连接层中的每个神经元都连接到前一层的所有神经元，而卷积层中的每个神经元只连接到前一层中某些邻近的神经元。具体来说，卷积层中的权重是共享的，意思是说，在一个区域内，同样的权重会应用在不同的位置上，使得它们对局部特征具有相同的响应。
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  强先验：这里的强先验指的是一种非常强的约束条件。在卷积层中，这个先验条件是每一个局部区域的权重必须和它的邻居相同，只是位置有所不同。这样一来，当输入稍微平移时，输出仍然保持相似。
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  池化层：池化层则是一种用来简化数据、减少计算量的方法。池化层可以看作是对输入的小幅改变不敏感的全连接层。这也是一种强先验，即认为即使输入发生了小幅度的变化，输出也应该保持稳定。
+\end{enumerate}
+
+通过这种方式，卷积层能够有效地检测出图像中的局部特征，而池化层则能帮助模型对这些特征进行简化和概括，使得模型更加稳健和高效。
+
+\paragraph{\texorpdfstring{\textbf{2.3.4.6
+CNN的特征提取}}{2.3.4.6 CNN的特征提取}}\label{2346-cnnux7684ux7279ux5f81ux63d0ux53d6}
+
+卷积神经网络（CNN）在处理图像时，会逐层提取不同层次的特征。具体过程如下：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  低级特征（Low-Level
+  Feature）：在初始层，CNN会检测到一些简单的视觉特征，如边缘、纹理等。这些特征往往是由图像中的像素值变化直接引起的。
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  中级特征（Mid-Level
+  Feature）：随着层数的增加，CNN会开始识别更复杂的模式，比如基本的形状、轮廓和角等。这些特征是低级特征的组合，形成一些较为明显的几何形状。
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  高级特征（High-Level
+  Feature）：在更深的层，CNN会提取出更加抽象和复杂的特征，比如特定物体的部件或形态。这些高级特征能够更好地描述图像中的实际内容。
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  可训练分类器（Trainable
+  Classifier）：当所有特征都被提取出来后，这些特征会被送入一个可训练的分类器中，通过对这些特征的综合分析，最终实现对图像的分类或识别。
+\end{enumerate}
+
+通过这种逐层提取特征的方式，CNN能够从低级到高级逐渐理解图像的内容，从而完成复杂的视觉任务。
+
+\paragraph{\texorpdfstring{\textbf{2.3.4.7
+AlexNet}}{2.3.4.7 AlexNet}}\label{2347-alexnet}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps133.jpg}}
+
+AlexNet，诞生于2012年，是最早的``深度学习''模型代表之一。
+
+AlexNet是首个在图像分类上取得显著改善的深度卷积神经网络（CNN）方法。它采用了包括7层的深度卷积神经网络，并使用了ReLU激活函数和dropout技术。
+
+这一巨大成功极大地推动了卷积神经网络的发展和创新。
+
+具体来说，AlexNet的结构包括多层卷积层和池化层，用于提取图像的特征，并通过全连接层进行分类。通过使用局部响应归一化（Local
+Response Normalization）和最大池化（Max
+Pooling），AlexNet在图像识别任务中取得了显著的性能提升。
+
+AlexNet的成功证明了深度学习方法在处理复杂视觉任务中的强大能力，并引领了后续许多深度学习模型的发展。
+
+\paragraph{\texorpdfstring{\textbf{2.3.4.8
+ResNet}}{2.3.4.8 ResNet}}\label{2348-resnet}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps134.jpg}}
+
+ResNet，即残差网络，是2015年推出的深度卷积神经网络链条中的一个重要版本。它通过引入残差连接（residual
+connection）有效地解决了深层网络训练困难的问题。残差连接允许信息在网络层之间轻松穿梭，使得网络变得更深的同时仍能保持或提升性能。
+
+微软研究院（MSRA）在2015年的ILSVRC比赛中使用了ResNet的集合模型，并赢得了大多数比赛。ResNet-34就是其中一个典型的架构，它与VGG-19和传统的34层卷积神经网络相比，具有显著的优势。
+
+ResNet之所以能够实现超深网络（如达到1202层）的训练得益于其独特的残差连接设计，这种设计帮助网络在极高深度下仍然能够有效地进行学习和优化，从而获得优异的性能表现。
+
+\subparagraph{\texorpdfstring{\textbf{2.3.4.8.1}
+\textbf{残差神经网络}}{2.3.4.8.1 残差神经网络}}\label{23481-ux6b8bux5deeux795eux7ecfux7f51ux7edc}
+
+残差神经网络（Residual Neural
+Networks/ResNet）由He等人于2015年提出，通过在神经网络中总结低层次隐含表示和高层次隐含表示来解决深层网络的训练问题。
+
+其核心思想是通过高层次表示学习低层次表示与目标标签之间的``残差''。具体实现中，残差块会在原始输入和经过权重层处理后的输出之间增加一个快捷连接（identity
+mapping），将输入直接传递给输出。这种结构可以有效避免深层网络中梯度消失的问题，使得网络可以更好地训练，并显著提升性能。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps135.jpg}}
+
+残差神经网络（ResNet）的表现略优于深度相同的普通卷积神经网络（plain
+CNNs）。残差神经网络通过学习残差，同时保留低层次表示，因而能够更深地扩展。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps136.jpg}}
+
+左图显示了普通卷积神经网络在不同层数上的误差变化。可以看到，随着层数增加，误差反而变大，说明普通网络在训练深层网络时遇到了困难。
+
+右图展示了不同层数的ResNet在训练过程中的误差变化。即便层数增加到110层，误差仍然能够维持在较低水平，表明ResNet极大地改善了深层网络的训练效果，使得网络可以在深度增加的情况下依然保持良好的性能。
+
+总体来说，ResNet通过引入残差连接，使得信息能够在层之间更快捷地传递，从而有效解决了深层网络中常见的训练问题，显著提升了深度学习模型的效果。
+
+\paragraph{\texorpdfstring{\textbf{2.3.4.9
+U-Net}}{2.3.4.9 U-Net}}\label{2349-u-net}
+
+U-Net在2015年由Olaf
+Ronneberger等人首次提出，主要用于生物医学图像分割。其也可以用于生成二维信息的任何网络，比如图像生成、风格迁移、深度估计等。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps137.jpg}}
+
+U-Net的基本结构是U形的，包括对称的编码器（收缩路径）和解码器（扩展路径）两部分。
+
+跳跃连接（Skip
+Connections）：跳跃连接将编码器和解码器中对应的对称层相连接，以保留详细信息并改善特征传输。这种结构使得在处理高分辨率图像时能够更好地恢复细节，提高了分割精度。
+
+U-Net的设计理念使得它在分割任务中表现出色，尤其适用于需要精细分割的场景，如医学图像分析等领域。
+
+\paragraph{\texorpdfstring{\textbf{2.3.4.10}
+\textbf{DenseNet}}{2.3.4.10 DenseNet}}\label{23410-densenet}
+
+密集连接神经网络（Densely Connected Neural
+Networks），简称DenseNet，于2017年提出。DenseNet的核心概念是每一层都与之前的所有层相连接，而不仅仅是与前一层相连接。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps138.jpg}}
+
+这种结构使得特征可以在网络中高效地复用，确保了低层特征能被高层使用，从而增强了模型的表达能力和梯度传递效果，减少了梯度消失的问题。
+
+通过保留低层次表示，DenseNet能够进行非常深的网络扩展，同时保持良好的性能。这种密集连接的策略使得DenseNet在多个图像识别任务中取得了优异的效果。
+
+DenseNet的设计突显了特征复用的重要性，显著提高了网络的计算效率和性能，为深度学习的发展提供了新的思路。
+
+密集连接神经网络（DenseNet）在使用相同数量的参数或计算量（flops）时，表现优于残差神经网络（ResNet）。
+
+然而，DenseNet的密集连接特性导致其并行计算效率较低。这构成了一种权衡（tradeoff）：DenseNet在精度上有所优势，但在计算效率上有所牺牲。
+
+图表左侧显示了DenseNet和ResNet在使用不同参数数量时的验证错误率；右侧显示了在测试时不同计算量下的验证错误率。可以看到，DenseNet在同类条件下的表现更佳。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps139.jpg}}
+
+此外，需要注意的是，ResNet和DenseNet的作者均毕业于清华大学，这表明在深度学习领域，清华大学培养了大量杰出的研究人员并做出了重要贡献。
+
+\paragraph{\texorpdfstring{\textbf{2.3.4.11 T*}*emporal convolutional
+network
+(TCN)**}{2.3.4.11 T**emporal convolutional network (TCN)**}}\label{23411-temporal-convolutional-network-tcn}
+
+Temporal convolutional network
+(TCN）是一种考虑时间因素的卷积神经网络，它于2018年被Bai,
+Shaojie等人提出。研究背景是解决序列建模问题，利用卷积架构解决该问题并证明结果优于传统的循环网络，如lstm，同时显示出更长的有效记忆。
+
+对于一个1维输入x\_0, x\_1, \textbackslash cdots,
+x\_T，TCN考虑了因果约束，也就是如果要预测一段时间t的输出，那么被限制只使用那些已经观察到的输入：x\_0，
+x\_1，\ldots，x\_T，而不是任何``未来''的输入x\_\{t+1\}，\ldots，x\_T。
+
+该网络的学习目标是：找到一个网络f，使实际输出和预测之间的预期损失最小化：
+
+\textbackslash hat\{y\}\emph{0, \textbackslash ldots,
+\textbackslash hat\{y\}}T = f(x\_0, \textbackslash ldots, x\_T)
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps140.jpg}}
+
+这种思想也被称为：因果卷积（causal
+convolutions），即t时刻的输出只由t时刻和更早前一层的元素卷积计算得到。
+
+\subsection{\texorpdfstring{\textbf{2.4}
+\textbf{序列建模：循环神经网络和递归神经网络}}{2.4 序列建模：循环神经网络和递归神经网络}}\label{24-ux5e8fux5217ux5efaux6a21ux5faaux73afux795eux7ecfux7f51ux7edcux548cux9012ux5f52ux795eux7ecfux7f51ux7edc}
+
+\subsubsection{\texorpdfstring{\textbf{2.4.1}
+\textbf{引言}}{2.4.1 引言}}\label{241-ux5f15ux8a00}
+
+循环神经网络（RNN）是一类人工神经网络，在这种网络中，单元之间的连接形成一个有向循环。
+
+与前馈神经网络不同，循环神经网络可以利用其内部记忆来处理任意的输入序列。
+
+第一个循环神经网络在1980年代被发明。
+
+递归神经网络（Recurrent Neural Networks,
+RNNs）是一类用于处理序列数据的神经网络。RNN的发展历史可以追溯到20世纪80年代以来，经历了多个重要的阶段和突破。
+
+20世纪80年代 RNN概念的提出
+
+1982年: John Hopfield 提出了Hopfield
+网络，类似于反馈神经网络，它是早期递归神经网络的基础。
+
+1986年: David
+Rumelhart等人引入了反向传播算法，并随后扩展到了时间序列数据，成为后来的RNN的基础。
+
+20世纪90年代 RNN的早期研究
+
+1990年: Elman网络的提出（由Jeffrey
+Elman），这种简单的RNN结构使用了隐层状态来记录过去的信息。
+
+1992年: Jürgen Schmidhuber 和 Sepp
+Hochreiter提出了长期依赖问题，并且初步讨论了如何使用RNN处理长时间依赖关系。Hochreiter更是提出了BPTT（Backpropagation
+Through Time）算法来训练RNN。
+
+1997年 LSTM的提出
+
+1997年: Sepp Hochreiter 和 Jürgen Schmidhuber提出了Long Short-Term
+Memory（LSTM）网络，
+目的是解决传统RNN存在的长时间依赖信息容易遗忘的问题。LSTM通过引入门机制，显著改善了传统RNN对长期依赖的学习效果。
+
+2000年代 RNN相关改进与应用
+
+2001年: LeCun等人提出了GRU（Gated Recurrent
+Unit），它是对LSTM的一种简化，不同的是GRU只有两个门（更新门和重置门），但在许多任务上表现不错。
+
+这一时期，RNN和LSTM逐渐在实践中应用于各种实际问题，包括自然语言处理、语音识别和时间序列预测等。
+
+2010年代 深度学习的兴起和RNN的大规模应用
+
+随着深度学习的兴起，计算能力和大数据的发展，RNN和LSTM得到了更广泛的应用。
+
+2014年: Google的研究中，LSTM被用于机器翻译任务，取得了显著的成功。
+
+同年，RNN结构的变体，如双向RNN、深度RNN也被提出和应用。
+
+2014年: Facebook推出了针对序列数据建模的著名工具包
+Torch，其中包含了RNN的各种实现。
+
+近年来的发展
+
+Transfomer模型的引入：2017年，Vaswani等人在论文《Attention is All You
+Need》中提出Transformer模型，该模型通过自注意力机制在许多任务上超过了传统的RNN和LSTM，尤其是在自然语言处理任务中表现出色。
+
+Transformers
+引发的新架构：基于Transformer的预训练模型，如BERT、GPT、T5等，在NLP领域成为新的标准，逐渐取代了RNN在许多任务中的地位。
+
+尽管Transformer和其变种如BERT、GPT等在很多任务上显示出更优越的性能，但RNN及其变种（如LSTM和GRU）仍在许多特定领域和应用中具有重要地位。
+
+总结而言，RNN自20世纪80年代的提出至今，经历了概念设立、复杂模型（如LSTM、GRU）的提出到大规模应用，以及现代深度学习模型（如Transformer）的冲击。RNN及其变体在序列数据处理上发挥了重要作用，并且结合新的架构和方法，不断推动着前沿技术的发展。
+
+\paragraph{\texorpdfstring{\textbf{2.4.1.1
+循环神经网络提供了很大的灵活性}}{2.4.1.1 循环神经网络提供了很大的灵活性}}\label{2411-ux5faaux73afux795eux7ecfux7f51ux7edcux63d0ux4f9bux4e86ux5f88ux5927ux7684ux7075ux6d3bux6027}
+
+在第一种情况中，我们看到一个``one to
+one''（一对一）的结构，类似于简单的神经网络。一个输入对应一个输出。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps141.jpg}}
+
+在第二种情况中，是``one to
+many''（一对多）的结构，这种结构从一个输入生成多个输出，适用于序列生成任务，比如图像描述生成。
+
+例如，图像字幕：图像→的单词序列
+
+第三种情况，``many to
+one''（多对一）表示多个输入对应一个输出，常用在情感分析中，通过多个词预测情感标签。
+
+例如，情绪分析：单词序列的→情绪
+
+最后一种情况是``many to
+many''（多对多），多个输入对应多个输出，可以处理诸如翻译和视频处理的任务。
+
+例如，机器翻译：序列→序列
+
+最后两种情况都是``多对多''（many to
+many）。第一个``多对多''结构适用于输入与输出的序列长度不相等的情况，例如机器翻译。第二个``多对多''结构适用于输入与输出的序列长度相等的情况，例如词性标注（POS
+Tagging）。
+
+图例中的箭头表示数据流的方向，红色箭头表示输入，绿色方框表示中间的隐藏层，蓝色箭头表示输出。
+
+\paragraph{\texorpdfstring{\textbf{2.4.1.2
+历史}}{2.4.1.2 历史}}\label{2412-ux5386ux53f2}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps142.jpg}}
+
+这张图展示了深度学习和自然语言处理（NLP）领域的一些关键发展历程。
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  最早可以追溯到1958年，Rosenblatt提出了感知器（Perceptron），为神经网络奠定了基础。
+\item
+  1982年，Hopfield提出了Hopfield网络，这是一种具有反馈的循环神经网络。
+\item
+  1986年，分布式表示理论被引入，显著推动了深度学习的发展。
+\item
+  1997年，LSTM（长短期记忆网络）由Schmidhuber等人提出，大大改善了序列数据处理的能力。
+\item
+  2003年，Bengio提出了神经概率语言模型（Neural Probabilistic Language
+  Model），进一步发展了语言模型的概念。
+\item
+  2010年，基于RNN（循环神经网络）的语言模型被提出，进一步提升了语言模型的表现。
+\item
+  2013年，word2vec被Mikolov提出，带来了词嵌入技术的突破。
+\item
+  2014年，Deepwalk提出，用于网络嵌入。
+\item
+  2014年，Glove也被引入作为另一种基于计数的词嵌入方法。
+\item
+  2014年，GRU（门控循环单元）和Seq2Seq模型被提出，极大地提升了序列到序列任务的表现。
+\item
+  2015年，注意力机制被引入，如"show, attend and
+  tell"模型，增强了模型的灵活性和性能。
+\item
+  2016年，ByteNet和context2vec被提出，在嵌入和翻译任务上有了新的进展。
+\item
+  2017年，Conv Seq2Seq模型被Facebook引入，用于机器翻译。
+\item
+  2017年，Google推出了新的AI架构，进一步改善了深度学习的应用。
+\item
+  2018年，BERT和OpenAI GPT被提出，标志着预训练语言模型的重大突破。
+\item
+  2018年，ELMo模型也被引入，用于动态词嵌入。
+\end{enumerate}
+
+这张图展示了从感知器到LSTM，再到现代的预训练语言模型（如BERT和GPT），深度学习和自然语言处理技术的演进过程。每一个节点和箭头都展示了关键人物和他们的研究成果如何相互影响与推动。
+
+\paragraph{\texorpdfstring{\textbf{2.4.1.3
+循环神经网络实例}}{2.4.1.3 循环神经网络实例}}\label{2413-ux5faaux73afux795eux7ecfux7f51ux7edcux5b9eux4f8b}
+
+当这种深度前馈网络的连接扩展到包括反馈连接时，被称为循环神经网络（Recurrent
+Neural Networks，RNN）。
+
+图(a)显示了一个深度前馈网络（DFN）的架构，数据从输入层经过隐藏层，最后到达输出层，没有任何反馈连接。图(b)则展示了一个循环神经网络（RNN）的架构，其中包括反馈连接，允许信息在网络内进行循环。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps143.jpg}}
+
+深度前馈网络和循环神经网络的主要区别在于连接方式，前者没有循环连接，后者具备反馈机制。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps144.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  输入x和输出y来自训练数据；
+\item
+  o是估计的输出值；
+\item
+  L用于评估估计输出ŷ = softmax(o)与真实输出y之间的差异（损失）；
+\item
+  U, W, V是三个权重矩阵。
+\end{enumerate}
+
+图解说明了一个循环神经网络（RNN）的工作流程。输入x通过权重矩阵U进行处理，生成隐藏状态h。隐藏状态h通过权重矩阵W来考虑前一个时间步的信息，更新后的隐藏状态通过权重矩阵V计算出估计的输出o。损失函数L根据估计输出o和真实输出y来评估两者之间的差距，通过训练过程来最小化这个损失。
+
+循环神经网络的一个例子
+
+让我们展开图形表示。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps145.jpg}}
+
+左边的图表示一个循环神经网络（RNN）的单个时间步。输入x通过权重矩阵U生成隐藏状态h。隐藏状态h通过权重矩阵W与前一时间步的信息结合，然后通过权重矩阵V计算出估计的输出o。损失函数L根据估计输出o和真实输出y评估两者之间的差异。
+
+右边的图是展开后的RNN，展示了多个时间步（t-1, t,
+t+1）的处理过程。每个时间步的输入x由相应的权重矩阵U处理后生成当前的隐藏状态h。隐藏状态h通过权重矩阵W传递给下一个时间步。每个时间步的估计输出o通过权重矩阵V计算并用损失函数L评估，最后与相对应时间步的真实输出y进行比较。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps146.jpg}}
+
+这里展示了RNN的更新方程：
+
+隐藏状态 ( h\^{}\{(t)\} )
+
+\emph{h}(\emph{t}) 的更新公式为：
+
+{[} h\^{}\{(t)\} = \textbackslash tanh \textbackslash left( b + W
+h\^{}\{(t-1)\} + U x\^{}\{(t)\} \textbackslash right) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps147.jpg}}
+
+其中，( b ) 是偏置，( W ) 是隐藏状态的权重矩阵，( U ) 是输入的权重矩阵。
+
+输出 ( o\^{}\{(t)\} )
+
+\emph{o}(\emph{t}) 的计算公式为：
+
+{[} o\^{}\{(t)\} = c + V h\^{}\{(t)\} {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps148.jpg}}
+
+其中，( c ) 是偏置，( V ) 是输出的权重矩阵。
+
+估计输出 ( \textbackslash hat\{y\}\^{}\{(t)\} )
+
+\emph{y}\^{} (\emph{t}) 使用 softmax 函数计算：
+
+{[} \textbackslash hat\{y\}\^{}\{(t)\} =
+\textbackslash text\{softmax\}(o\^{}\{(t)\}) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps149.jpg}}
+
+目标函数（损失函数）为：
+
+{[} L = \textbackslash sum\_t L\^{}\{(t)\} = \textbackslash sum\_t
+\textbackslash log P(y\^{}\{(t)\} \textbackslash mid x\^{}\{(1)\},
+\textbackslash ldots, x\^{}\{(t)\}) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps150.jpg}}
+
+此损失函数对多个时间步上的估计输出与真实输出之间的差异进行求和。
+
+图示展示了多个时间步的展开过程，每个时间步的信息通过权重矩阵传递并影响后续时间步的计算。这样能够有效捕捉序列数据中的时间依赖性。
+
+\paragraph{\texorpdfstring{\textbf{2.4.1.4
+循环神经网络类型}}{2.4.1.4 循环神经网络类型}}\label{2414-ux5faaux73afux795eux7ecfux7f51ux7edcux7c7bux578b}
+
+循环神经网络有许多不同的类型：
+
+隐藏单元之间的循环连接
+
+从一个时间步的输出到下一个时间步的隐藏单元的循环连接
+
+隐藏单元之间的循环连接，但只产生一个输出
+
+\ldots\ldots{}
+
+\subparagraph{\texorpdfstring{\textbf{2.4.1.4.1
+输出循环}}{2.4.1.4.1 输出循环}}\label{24141-ux8f93ux51faux5faaux73af}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps151.jpg}}
+
+图(a): 输出循环的网络
+
+这个图展示了输出循环网络，唯一的循环连接是从输出层到隐藏层。网络展开后展示了多个时间步的处理过程。
+
+图(b): 教师强制
+
+教师强制是一种训练循环神经网络的技术。训练时使用真实的输出值进行计算，而在测试时使用模型的预估值。如果在训练和测试中使用相同的输入方式，就能更好地逼近理想输出状态。
+
+条件似然函数：
+
+教师强制的条件似然函数表示为：
+
+{[} \textbackslash log p(y\^{}\{(1)\}, y\^{}\{(2)\} \textbackslash mid
+x\^{}\{(1)\}, x\^{}\{(2)\}) = \textbackslash log p(y\^{}\{(2)\}
+\textbackslash mid y\^{}\{(1)\}, x\^{}\{(1)\}, x\^{}\{(2)\}) +
+\textbackslash log p(y\^{}\{(1)\} \textbackslash mid x\^{}\{(1)\},
+x\^{}\{(2)\}) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps152.jpg}}
+
+这种条件似然函数反映了输出值与输入数据之间的概率关系，通过最大化这个似然函数，可以更好地训练模型。
+
+\subparagraph{\texorpdfstring{\textbf{2.4.1.4.2
+关于输出循环的讨论}}{2.4.1.4.2 关于输出循环的讨论}}\label{24142-ux5173ux4e8eux8f93ux51faux5faaux73afux7684ux8ba8ux8bba}
+
+优点：
+
+所有时间步都是解耦的，可以并行训练
+
+缺点：
+
+缺乏隐藏层到隐藏层的循环，严格来说功能较弱
+
+解决方案：
+
+随机选择使用生成的值或实际值作为输入
+
+\paragraph{\texorpdfstring{\textbf{2.4.1.5
+循环神经网络中的梯度计算}}{2.4.1.5 循环神经网络中的梯度计算}}\label{2415-ux5faaux73afux795eux7ecfux7f51ux7edcux4e2dux7684ux68afux5ea6ux8ba1ux7b97}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps153.jpg}}
+
+梯度可以通过一种广义的反向传播算法来计算，这种算法具体叫做时间上的反向传播（BPTT）。
+
+以下是梯度计算的步骤和公式：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  对于输出层的梯度：
+\end{enumerate}
+
+{[} (\textbackslash nabla\emph{\{o\^{}\{(t)\}\}L)}i =
+\textbackslash frac\{\textbackslash partial L\}\{\textbackslash partial
+o\_i\^{}\{(t)\}\} = \textbackslash frac\{\textbackslash partial
+L\^{}\{(t)\}\}\{\textbackslash partial o\_i\^{}\{(t)\}\} =
+\textbackslash hat\{y\}\emph{i\^{}\{(t)\} 1}\{i,y\^{}\{(t)\}\} {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps154.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  对于隐藏层的梯度：
+\end{enumerate}
+
+{[} \textbackslash nabla\emph{\{h\^{}\{(t)\}\}L =
+W\^{}\textbackslash top (\textbackslash nabla}\{h\^{}\{(t+1)\}\}L)
+\textbackslash text\{diag\}(1 (h\^{}\{(t+1)\})\^{}2) +
+V\^{}\textbackslash top (\textbackslash nabla\_\{o\^{}\{(t)\}\}L) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps155.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  对于偏置向量 ( c ) 的梯度：
+\end{enumerate}
+
+{[} \textbackslash nabla\emph{\{c\}L = \textbackslash sum}\{t\}
+\textbackslash nabla\_\{o\^{}\{(t)\}\}L {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps156.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  对于偏置向量 ( b ) 的梯度：
+\end{enumerate}
+
+{[} \textbackslash nabla\emph{\{b\}L = \textbackslash sum}\{t\}
+\textbackslash text\{diag\}(1 (h\^{}\{(t)\})\^{}2)
+\textbackslash nabla\_\{h\^{}\{(t)\}\}L {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps157.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  对于权重矩阵 ( V ) 的梯度：
+\end{enumerate}
+
+{[} \textbackslash nabla\emph{\{V\}L = \textbackslash sum}\{t\}
+(\textbackslash nabla\_\{o\^{}\{(t)\}\}L)
+(h\^{}\{(t)\})\^{}\textbackslash top {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps158.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  对于权重矩阵 ( W ) 的梯度：
+\end{enumerate}
+
+{[} \textbackslash nabla\emph{\{W\}L = \textbackslash sum}\{t\}
+\textbackslash text\{diag\}(1 (h\^{}\{(t)\})\^{}2)
+(\textbackslash nabla\_\{h\^{}\{(t)\}\}L)
+(h\^{}\{(t-1)\})\^{}\textbackslash top {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps159.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  对于权重矩阵 ( U ) 的梯度：
+\end{enumerate}
+
+{[} \textbackslash nabla\emph{\{U\}L = \textbackslash sum}\{t\}
+\textbackslash text\{diag\}(1 (h\^{}\{(t)\})\^{}2)
+(\textbackslash nabla\_\{h\^{}\{(t)\}\}L)
+(x\^{}\{(t)\})\^{}\textbackslash top {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps160.jpg}}
+
+这些公式通过时间上的反向传播（BPTT）来计算循环神经网络的梯度，从而在训练过程中调整网络的参数，使损失函数
+( L ) 最小化。
+
+\paragraph{\texorpdfstring{\textbf{2.4.1.6
+循环神经网络作为有向图模型}}{2.4.1.6 循环神经网络作为有向图模型}}\label{2416-ux5faaux73afux795eux7ecfux7f51ux7edcux4f5cux4e3aux6709ux5411ux56feux6a21ux578b}
+
+下图总结了我们讨论的两种RNN类型。左侧图展示了隐藏层-隐藏层循环的网络，右侧图展示了输出-隐藏层循环的网络。两种类型分别通过不同的对数似然函数来最大化训练目标。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps161.jpg}}
+
+图(a): 隐藏层-隐藏层循环
+
+这个图展示了循环神经网络中的隐藏层到隐藏层的循环连接。展开后的图展示了多个时间步的处理过程，每个时间步间的隐藏状态通过权重矩阵
+( W ) 传递给下一个时间步。训练目标是最大化对数似然函数
+(\textbackslash log P(y\^{}\{(t)\} \textbackslash mid x\^{}\{(1)\},
+\textbackslash ldots, x\^{}\{(t)\}) )。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps162.jpg}}
+
+图(b): 输出-隐藏层循环
+
+这个图展示了循环神经网络中的输出层到隐藏层的循环连接。展开后的图展示了多个时间步的处理过程，每个时间步的输出通过权重矩阵
+( W ) 反馈回隐藏状态。训练目标是最大化对数似然函数 (\textbackslash log
+P(y\^{}\{(t)\} \textbackslash mid x\^{}\{(1)\}, \textbackslash ldots,
+x\^{}\{(t)\}, y\^{}\{(1)\}, \textbackslash ldots, y\^{}\{(t-1)\}) )。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps163.jpg}}
+
+\paragraph{\texorpdfstring{\textbf{2.4.1.7}
+\textbf{用循环神经网络对序列进行建模}}{2.4.1.7 用循环神经网络对序列进行建模}}\label{2417-ux7528ux5faaux73afux795eux7ecfux7f51ux7edcux5bf9ux5e8fux5217ux8fdbux884cux5efaux6a21}
+
+用循环神经网络对序列进行建模，并根据上下文条件生成
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps164.jpg}}
+
+图展示了循环神经网络（RNN）在图像描述等任务中的应用。
+
+图(a)：这个图展示了一个RNN模型如何从单个图像输入生成描述图像的词语序列。通过将图像信息与时间步的序列数据结合，模型能够逐步生成描述图像内容的词语。
+
+图(b)：这是一个Feifei
+Li在CVPR\textquotesingle15会议论文中的实际例子。这里展示了RNN如何生成描述图像内容的词语。但是，在这个例子中，RNN只在第一个时间步使用了图像信息作为条件。
+
+在这些应用中，RNN通过从图像中提取特征来生成一系列描述词语。例如，对一张含有草帽的图片进行描述，模型会生成类似于``straw
+hat''的词语序列。模型首先通过卷积神经网络（CNN）提取图像特征，然后这些特征被输入到RNN的第一个时间步，接下来每个时间步通过结合前面的词语生成新的词语，直到生成完整描述。
+
+\subsubsection{\texorpdfstring{\textbf{2.4.2
+双向RNN}}{2.4.2 双向RNN}}\label{242-ux53ccux5411rnn}
+
+\paragraph{\texorpdfstring{\textbf{2.4.2.1
+双向循环神经网络}}{2.4.2.1 双向循环神经网络}}\label{2421-ux53ccux5411ux5faaux73afux795eux7ecfux7f51ux7edc}
+
+为了进行分类，你需要结合来自前后文的信息。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps165.jpg}}
+
+图例展示了双向循环神经网络（Bidirectional
+RNNs）的结构，它通过结合序列中前向传播和后向传播的数据来进行处理。
+
+双向RNN有两个隐藏层，一个用于从左到右的前向传播，另一个用于从右到左的后向传播。
+
+更新公式如下：
+
+前向隐藏状态 (\textbackslash overrightarrow\{h\_t\}):
+
+{[}
+
+\textbackslash overrightarrow\{h\_t\} =
+f(\textbackslash overrightarrow\{W\} x\_t +
+\textbackslash overrightarrow\{V\}
+\textbackslash overrightarrow\{h\_\{t-1\}\} +
+\textbackslash overrightarrow\{b\})
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps166.jpg}}
+
+后向隐藏状态 (\textbackslash overleftarrow\{h\_t\}):
+
+{[}
+
+\textbackslash overleftarrow\{h\_t\} =
+f(\textbackslash overleftarrow\{W\} x\_t +
+\textbackslash overleftarrow\{V\}
+\textbackslash overleftarrow\{h\_\{t-1\}\} +
+\textbackslash overleftarrow\{b\})
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps167.jpg}}
+
+最终输出 (\textbackslash hat\{y\}):
+
+{[}
+
+\textbackslash hat\{y\} = g(Uh\_t + c) =
+g(U{[}\textbackslash overrightarrow\{h\_t\},
+\textbackslash overleftarrow\{h\_t\}{]} + c)
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps168.jpg}}
+
+在双向RNN中，每个时间步的隐藏状态都包括前向和后向两个方向的信息，这使得模型可以更全面地理解输入序列中的信息。这种架构特别适用于需要结合前后文信息的任务，如自然语言处理中的命名实体识别和语音识别。
+
+\paragraph{\texorpdfstring{\textbf{2.4.2.2}
+\textbf{深层双向循环神经网络（Deep Bidirectional
+RNN）}}{2.4.2.2 深层双向循环神经网络（Deep Bidirectional RNN）}}\label{2422-ux6df1ux5c42ux53ccux5411ux5faaux73afux795eux7ecfux7f51ux7edcdeep-bidirectional-rnn}
+
+一个深层双向循环神经网络包含三层RNN，用于更高效地捕捉序列数据中的复杂依赖关系。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps169.jpg}}
+
+更新公式：
+
+前向隐藏状态 (\textbackslash overrightarrow\{h\_t\}\^{}\{i\}) 在第 (i)
+层：
+
+{[}
+
+\textbackslash overrightarrow\{h\_t\}\^{}\{i\} =
+f(\textbackslash overrightarrow\{W\}\^{}\{i\}
+\textbackslash overrightarrow\{h\_\{t-1\}\}\^{}\{i\} +
+\textbackslash overrightarrow\{V\}\^{}\{i\}
+\textbackslash overrightarrow\{h\_t\}\^{}\{i-1\} +
+\textbackslash overrightarrow\{b\}\^{}\{i\})
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps170.jpg}}
+
+后向隐藏状态 (\textbackslash overleftarrow\{h\_t\}\^{}\{i\}) 在第 (i)
+层：
+
+{[}
+
+\textbackslash overleftarrow\{h\_t\}\^{}\{i\} =
+f(\textbackslash overleftarrow\{W\}\^{}\{i\}
+\textbackslash overleftarrow\{h\_\{t-1\}\}\^{}\{i\} +
+\textbackslash overleftarrow\{V\}\^{}\{i\}
+\textbackslash overleftarrow\{h\_t\}\^{}\{i-1\} +
+\textbackslash overleftarrow\{b\}\^{}\{i\})
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps171.jpg}}
+
+最终输出 (\textbackslash hat\{y\}):
+
+{[}
+
+\textbackslash hat\{y\} = g(U h\_t + c) = g(U
+{[}\textbackslash overrightarrow\{h\_t\}\^{}L,
+\textbackslash overleftarrow\{h\_t\}\^{}L{]} + c)
+
+{]}
+
+其中，( L ) 表示网络的最后一层。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps172.jpg}}
+
+在此结构中，每层的前向和后向信息都通过多个时间步传播，从而在每一层中捕捉序列的双向依赖关系。这种架构能够更好地理解和处理复杂的序列数据，是许多自然语言处理和时间序列预测任务中的常见选择。
+
+\subsubsection{\texorpdfstring{\textbf{2.4.3 编码器-解码器
+架构}}{2.4.3 编码器-解码器 架构}}\label{243-ux7f16ux7801ux5668-ux89e3ux7801ux5668-ux67b6ux6784}
+
+\paragraph{\texorpdfstring{\textbf{2.4.3.1}
+\textbf{编码器-解码器序列到序列架构}}{2.4.3.1 编码器-解码器序列到序列架构}}\label{2431-ux7f16ux7801ux5668-ux89e3ux7801ux5668ux5e8fux5217ux5230ux5e8fux5217ux67b6ux6784}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps173.jpg}}
+
+上图展示了我们目前讨论的循环神经网络（RNN）架构。
+
+图(a)：序列到固定大小向量
+
+这种架构将输入序列映射到一个固定大小的向量，应用于将可变长度输入转换为固定长度表示，如句子编码。
+
+图(b)：固定大小向量到序列
+
+这种架构从固定大小的向量生成输出序列，常用于生成任务，如将一个语义向量解码为句子。
+
+图(c)：序列到同长度序列
+
+这种架构将输入序列映射到相同长度的输出序列，通过RNN捕捉输入序列的时间依赖，逐步生成与输入相同长度的输出。
+
+这些架构都用于不同的任务，如语音识别、机器翻译和问答系统。其中一个关键问题是，能否训练RNN将输入序列映射到不一定相同长度的输出序列。这在许多应用中非常重要，如语音识别、机器翻译和问答系统等。RNN通过编码器-解码器架构实现这一点，能够处理多种序列到序列的任务。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps174.jpg}}
+
+上图展示了一个编码器-解码器或序列到序列的循环神经网络（RNN）架构。
+
+在这个架构中，输入序列 ( x ) 的每个元素 ( x\^{}\{(i)\} )
+被编码器逐步处理，最终生成一个固定大小的向量表示 ( C )。这个向量 ( C )
+捕捉了整个输入序列的信息。然后，解码器使用这个固定大小的向量 ( C )
+来生成输出序列 ( y )。
+
+当 ( C )
+是一个固定大小的向量时，这种架构可以视为"序列到固定大小向量"的RNN和"固定大小向量到序列"的RNN的结合。这种组合使得模型能够将可变长度的输入序列映射到可变长度的输出序列，在许多应用中非常重要，如机器翻译和文本生成。
+
+当 ( C )
+为固定大小向量时，这种架构可以视为``序列到固定大小向量''的RNN和``固定大小向量到序列''的RNN的组合。
+
+上图展示了编码器-解码器或序列到序列的循环神经网络（RNN）架构。具体来说，输入序列
+( x ) 的每个元素 ( x\^{}\{(i)\} )
+被编码器逐步处理，生成一个固定大小的向量表示 ( C )。这个向量 ( C )
+捕捉了整个输入序列的信息。然后，解码器使用固定大小的向量 ( C )
+生成输出序列 ( y )。
+
+此架构的局限在于，固定大小的向量 ( C )
+可能过于小，无法总结长序列的信息（Bahdanau等，2015年）。这意味着对于较长的输入序列，信息压缩至固定大小的向量可能导致信息损失，从而影响输出的准确性。
+
+\paragraph{\texorpdfstring{ }{ }}\label{-3}
+
+\paragraph{\texorpdfstring{\textbf{2.4.3.2}
+\textbf{编码器-解码器架构与注意力机制}}{2.4.3.2 编码器-解码器架构与注意力机制}}\label{2432-ux7f16ux7801ux5668-ux89e3ux7801ux5668ux67b6ux6784ux4e0eux6ce8ux610fux529bux673aux5236}
+
+固定大小的向量 ( C )
+可能过小，无法有效总结长序列（Bahdanau等，2015年）。为了解决这个问题，他们建议将
+( C ) 改为可变长度序列。此外，他们引入了注意力机制。
+
+注意力机制通过对每个输入位置的相关性进行评分来动态调整，它使模型能够关注到更加相关的输入信息，而不必压缩所有信息到固定大小的向量中。
+
+下图展示了这种机制的工作原理。公式中的 ( a(\textbackslash cdot) )
+
+a(·)
+
+是一个对齐模型，它计算输入位置 ( j ) 与输出位置 ( i )
+之间的匹配程度。这个对齐模型被参数化为一个前馈神经网络。通过这种方式，注意力机制允许解码器在生成每个时间步的输出时动态选择最相关的输入部分，提高了模型在处理长序列时的表现。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps175.jpg}}
+
+在图中， ( \textbackslash alpha )
+代表不同时间步上注意力权重，它们决定了每个隐藏状态 ( h )
+对生成当前输出的重要性。这种机制有效地解决了固定大小向量 ( C )
+导致的信息瓶颈问题。
+
+考虑一个输入（或中间）序列，以及一个更高级别的表示，这个表示可以在执行某些任务（例如机器翻译）时选择``在哪里看''每个位置。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps176.jpg}}
+
+在注意力机制中，高级别表示（如图中的蓝色节点）会在处理每个时间步的任务时，根据输入序列（下级别的蓝色节点）的不同位置进行加权。Softmax函数用于计算每个下级别位置的权重，这些权重根据上下文在较低和较高位置之间进行调整。
+
+该方法允许模型在执行任务时动态调整聚焦点，提高了对长序列的处理能力，也使得模型在处理复杂任务时具有更大的灵活性和表现力。例如，在机器翻译中，注意力机制可以帮助模型准确地对齐源语言和目标语言的词语，提高翻译质量。
+
+解码器常常被训练来预测下一个单词 ( y\_t )，给定上下文向量 ( c )
+和所有之前的单词 (\{y\_1, y\_2, ..., y\_\{t-1\}\})。
+
+\{\emph{y}1 ,\emph{y}2 ,...,\emph{y**t}−1 \}
+
+如公式所示：
+
+{[} p(y\_t \textbackslash mid y\_1, ..., y\emph{\{t-1\}, x) =
+g(y}\{t-1\}, s\_t, c\_t) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps177.jpg}}
+
+其中，( s\_t ) 是位置 ( t ) 的RNN隐藏状态，通过以下公式计算（5）：
+
+{[} s\_i = f(s\emph{\{i-1\}, y}\{i-1\}, c\_i) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps178.jpg}}
+
+图解展示了注意力机制在解码过程中的工作方式，通过计算每个时间步的上下文向量
+( c\_t )
+来确定解码器在生成每个输出单词时应关注输入序列的哪些部分。注意力权重 (
+\textbackslash alpha\_\{t, i\} )
+用于表示输入序列中每个位置的重要性。这种机制显著提高了模型在处理长序列和复杂翻译任务时的表现。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps179.jpg}}
+
+\paragraph{\texorpdfstring{\textbf{2.4.3.3}
+\textbf{注意力机制}}{2.4.3.3 注意力机制}}\label{2433-ux6ce8ux610fux529bux673aux5236}
+
+上下文向量 ( c\_t ) 依赖于注释序列 ( (h\_1, ..., h\_T)
+)，这些注释由编码器将输入句子映射而来。上下文向量的计算公式如下：
+
+{[} c\_t = \textbackslash sum\emph{\{j=1\}\^{}\{T\}
+\textbackslash alpha}\{tj\} h\_j {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps180.jpg}}
+
+图解展示了注意力机制的工作方式。注意力权重 (
+\textbackslash alpha\_\{tj\} ) 表示在时间步 ( t ) 时，输入序列中位置 ( j
+) 的重要性。这些权重由模型动态计算，并用于加权输入序列的隐藏状态 ( h\_j
+)。最终，上下文向量 ( c\_t )
+是所有隐藏状态的加权和，它在解码器生成下一个输出 ( y\_t )
+时提供了相关的上下文信息。这种机制使得模型能够更加有效地捕捉长序列中的依赖关系。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps181.jpg}}
+
+权重 (\textbackslash alpha)
+称为``注意力矩阵''，用于选择``关注哪里''，其计算公式如下：
+
+{[} \textbackslash alpha\emph{\{tj\} =
+\textbackslash frac\{\textbackslash exp\{e}\{tj\}\}\}\{\textbackslash sum\emph{\{k=1\}\^{}\{T\}
+\textbackslash exp\{e}\{tk\}\}\} {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps182.jpg}}
+
+其中，
+
+{[} e\emph{\{tj\} = h(s}\{t-1\}, h\_j) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps183.jpg}}
+
+两个公式展示了注意力权重的计算方式。注意力矩阵通过计算输入序列中每个位置
+( j ) 与位置 ( t ) 的输出的匹配度来决定关注哪些部分。匹配度 (
+e\emph{\{tj\} ) 是由注意力模型 ( h ) 根据前一时间步的隐藏状态 (
+s}\{t-1\} ) 和输入位置 ( h\_j ) 计算的分数。然后，注意力权重
+(\textbackslash alpha\_\{tj\})
+通过对这些分数进行softmax归一化获得，确保其总和为1。这种机制使得模型能够动态地选择与当前任务最相关的信息，从而提高模型的表现。
+
+注意力模型可以被参数化为前馈神经网络（或多层感知器等），并与系统的所有其他组件共同训练。这意味着在训练过程中，注意力模型会结合整个网络的反馈进行优化，以提升整体系统的性能。
+
+\paragraph{\texorpdfstring{\textbf{2.4.3.4}
+\textbf{带有序列到序列架构的注意力机制}}{2.4.3.4 带有序列到序列架构的注意力机制}}\label{2434-ux5e26ux6709ux5e8fux5217ux5230ux5e8fux5217ux67b6ux6784ux7684ux6ce8ux610fux529bux673aux5236}
+
+总结来说，带有序列到序列架构的注意力机制具有以下形式化表示：
+
+输出单词的概率由以下公式计算：
+
+{[} p(y\_i \textbackslash mid y\_1, \textbackslash cdots,
+y\emph{\{i-1\}, x) = g(y}\{i-1\}, s\_i, c\_i) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps184.jpg}}
+
+隐藏状态 ( s\_i ) 通过以下公式更新：
+
+{[} s\_i = f(s\emph{\{i-1\}, y}\{i-1\}, c\_i) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps185.jpg}}
+
+上下文向量 ( c\_i ) 由输入序列的加权求和得到：
+
+{[} c\_i = \textbackslash sum\emph{\{j=1\}\^{}\{T\_x\}
+\textbackslash alpha}\{ij\} h\_j {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps186.jpg}}
+
+注意力权重 ( \textbackslash alpha\_\{ij\} ) 使用softmax函数计算：
+
+{[} \textbackslash alpha\emph{\{ij\} =
+\textbackslash frac\{\textbackslash exp(e}\{ij\})\}\{\textbackslash sum\emph{\{j=1\}\^{}\{T\_x\}
+\textbackslash exp(e}\{ij\})\} {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps187.jpg}}
+
+匹配得分 ( e\_\{ij\} ) 定义为：
+
+{[} e\emph{\{ij\} = a(s}\{i-1\}, h\_j) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps188.jpg}}
+
+图展示了一个对齐模型 ( a(\textbackslash cdot) )，它计算输入序列中位置 (
+j ) 处的输入和生成目标序列的位置 ( i ) 处的输出之间的匹配程度。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps189.jpg}}
+
+这个注意力机制允许解码器在生成每个输出单词时动态关注输入序列的不同部分，从而能够更准确地处理长序列和复杂任务。通过这种机制，模型能够根据输入序列中的相关信息生成更好的输出结果。
+
+\subsubsection{\texorpdfstring{\textbf{2.4.4
+长期依赖}}{2.4.4 长期依赖}}\label{244-ux957fux671fux4f9dux8d56}
+
+\paragraph{\texorpdfstring{\textbf{2.4.4.1}
+\textbf{让我们回顾一下梯度消失和梯度爆炸问题}}{2.4.4.1 让我们回顾一下梯度消失和梯度爆炸问题}}\label{2441-ux8ba9ux6211ux4eecux56deux987eux4e00ux4e0bux68afux5ea6ux6d88ux5931ux548cux68afux5ea6ux7206ux70b8ux95eeux9898}
+
+让我们首先回顾在``深度模型训练优化''中提到的长时依赖性问题。
+
+\subparagraph{\texorpdfstring{\textbf{2.4.4.1.1
+纯线性情况}}{2.4.4.1.1 纯线性情况}}\label{24411-ux7eafux7ebfux6027ux60c5ux51b5}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  考虑一个没有非线性的递归神经网络（RNN）
+\end{enumerate}
+
+递归神经网络的状态更新公式为：
+
+{[}
+
+h\^{}\{(t)\} = Wh\^{}\{(t-1)\} + Vx\^{}\{(t)\} + b
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps190.jpg}}
+
+梯度的递推公式为：
+
+{[}
+
+\textbackslash frac\{\textbackslash partial
+h\^{}\{(t)\}\}\{\textbackslash partial h\^{}\{(k)\}\} =
+\textbackslash prod\_\{j=k+1\}\^{}t W\^{}\textbackslash top =
+(W\^{}\textbackslash top)\^{}\{t-k\}
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps191.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  假设矩阵 \$W\$ 已经进行特征值分解
+\end{enumerate}
+
+令 ( W\^{}\textbackslash top = V
+\textbackslash text\{diag\}(\textbackslash lambda) V\^{}\{-1\} )，
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps192.jpg}}
+
+则有：
+
+{[}
+
+(W\^{}\textbackslash top)\^{}\{t-k\} = V
+\textbackslash text\{diag\}(\textbackslash lambda)\^{}\{t-k\}
+V\^{}\{-1\}
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps193.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  梯度消失与梯度爆炸问题
+\end{enumerate}
+
+如果任何特征值 ( \textbackslash lambda\_i )
+的绝对值不接近1，它将会出现两种情况之一：
+
+若 ( \textbar\textbackslash lambda\_i\textbar{} \textgreater{} 1
+)，梯度会爆炸。
+
+若 ( \textbar\textbackslash lambda\_i\textbar{} \textless{} 1
+)，梯度会消失。
+
+这种现象就是我们所称的梯度消失与梯度爆炸问题。当进行反向传播时，超过或小于某个阈值的特征值导致梯度增大或减小到不可忽视的程度，这会影响模型的训练效果。
+
+\subparagraph{\texorpdfstring{\textbf{2.4.4.1.2}
+\textbf{非线性情况}}{2.4.4.1.2 非线性情况}}\label{24412-ux975eux7ebfux6027ux60c5ux51b5}
+
+让我们讨论雅可比矩阵及其范数：
+
+对于递归神经网络，状态更新公式为：
+
+{[} h\^{}\{(t)\} = f(Wh\^{}\{(t-1)\} + Vx\^{}\{(t)\} + b) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps194.jpg}}
+
+其梯度表示为：
+
+{[} \textbackslash frac\{\textbackslash partial
+h\^{}\{(t)\}\}\{\textbackslash partial h\^{}\{(k)\}\} =
+\textbackslash prod\emph{\{j=k+1\}\^{}t
+\textbackslash frac\{\textbackslash partial
+h\^{}\{(j)\}\}\{\textbackslash partial h\^{}\{(j-1)\}\} =
+\textbackslash prod}\{j=k+1\}\^{}t W\^{}\textbackslash top
+\textbackslash text\{diag\} \textbackslash left(
+f\textquotesingle(h\^{}\{(j-1)\}) \textbackslash right) {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps195.jpg}}
+
+并且有如下范数不等式：
+
+{[} \textbackslash left\textbar{}
+\textbackslash frac\{\textbackslash partial
+h\^{}\{(t)\}\}\{\textbackslash partial h\^{}\{(j-1)\}\}
+\textbackslash right\textbar{} \textbackslash leq
+\textbar{}W\^{}\textbackslash top\textbar{} \textbackslash times
+\textbackslash left\textbar{} \textbackslash text\{diag\}
+\textbackslash left( f\textquotesingle(h\^{}\{(j-1)\})
+\textbackslash right) \textbackslash right\textbar{} {]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps196.jpg}}
+
+使用非线性激活函数可能会带来以下影响：
+
+它能够约束递归神经网络的动态行为，从而减轻梯度爆炸问题。
+
+但是，可能会使梯度消失问题变得更加严重。
+
+在剩余的内容中，我们将讨论用于减少学习长时依赖困难的各种方法。
+
+\paragraph{\texorpdfstring{\textbf{2.4.4.2}
+\textbf{处理梯度爆炸的技巧：梯度剪裁}}{2.4.4.2 处理梯度爆炸的技巧：梯度剪裁}}\label{2442-ux5904ux7406ux68afux5ea6ux7206ux70b8ux7684ux6280ux5de7ux68afux5ea6ux526aux88c1}
+
+解决梯度爆炸问题的一种方法是梯度剪裁，这种方法由Mikolov首次提出。
+
+在没有进行梯度剪裁时，梯度可能会变得非常大，从而导致模型参数更新不稳定。而进行梯度剪裁后，梯度被限制在一定的范围内，使参数更新更加稳定。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps197.jpg}}
+
+下面是梯度剪裁的伪代码：
+
+Algorithm 1 Pseudo-code for norm clipping
+
+{[}
+
+\textbackslash hat\{g\} \textbackslash leftarrow
+\textbackslash frac\{\textbackslash partial
+\textbackslash mathcal\{E\}\}\{\textbackslash partial
+\textbackslash theta\}
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps198.jpg}}
+
+if ( \textbar{}\textbackslash hat\{g\}\textbar{} \textbackslash geq
+\textbackslash text\{threshold\} )
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps199.jpg}}
+阈值 then
+
+{[}
+
+\textbackslash hat\{g\} \textbackslash leftarrow
+\textbackslash text\{threshold\} \textbackslash times
+\textbackslash frac\{\textbackslash hat\{g\}\}\{\textbar{}\textbackslash hat\{g\}\textbar{}\}
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps200.jpg}}
+
+end if
+
+在梯度剪裁中，threshold（阈值）是一个预先设定的标量值，用来限制梯度的最大范数。具体来说，当梯度的范数（即梯度的长度）超过这个预先设定的阈值时，就进行剪裁操作，将梯度的范数调整到这个阈值，从而防止梯度爆炸。
+
+伪代码解释
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  计算梯度 ( \textbackslash hat\{g\} \textbackslash leftarrow
+  \textbackslash frac\{\textbackslash partial
+  \textbackslash mathcal\{E\}\}\{\textbackslash partial
+  \textbackslash theta\} )，这里的 (\textbackslash mathcal\{E\})
+  是损失函数，( \textbackslash theta ) 是模型参数。
+\item
+  检查梯度的范数 ( \textbar{}\textbackslash hat\{g\}\textbar{} )
+  是否超过阈值（threshold）。
+\item
+  如果 ( \textbar{}\textbackslash hat\{g\}\textbar{} \textbackslash geq
+  \textbackslash text\{threshold\} )，则对梯度进行剪裁：
+\end{enumerate}
+
+将梯度的范数重设为阈值，但保持方向不变。具体操作是 (
+\textbackslash hat\{g\} \textbackslash leftarrow
+\textbackslash text\{threshold\} \textbackslash times
+\textbackslash frac\{\textbackslash hat\{g\}\}\{\textbar{}\textbackslash hat\{g\}\textbar{}\}
+)。
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  这样限制了梯度的最大值，防止了梯度爆炸问题。
+\end{enumerate}
+
+这个阈值（threshold）通常是根据数据集和模型结构实验调整得到的一个参数。设定一个合适的阈值可以有效地防止梯度爆炸，而不会对梯度的正常更新产生太大的负面影响。
+
+这种方法在递归神经网络（RNN）中效果显著，可以大大提高模型的稳定性和训练效果。
+
+\paragraph{\texorpdfstring{\textbf{2.4.4.3}
+\textbf{处理梯度消失问题的方法：权重初始化与ReLU激活函数}}{2.4.4.3 处理梯度消失问题的方法：权重初始化与ReLU激活函数}}\label{2443-ux5904ux7406ux68afux5ea6ux6d88ux5931ux95eeux9898ux7684ux65b9ux6cd5ux6743ux91cdux521dux59cbux5316ux4e0ereluux6fc0ux6d3bux51fdux6570}
+
+初始化权重 ( W ) 为单位矩阵 ( I ) 并使用ReLU激活函数 ( f(z) =
+\textbackslash max(0, z) ).
+
+这种方法可以显著改善梯度消失问题。
+
+关于深度学习中的初始化，有多种想法。最早的初始化方法之一是在Socher等人2013年发表的《解析组合向量语法》中提出的。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps201.jpg}}
+
+图中展示了不同初始化和激活函数对递归神经网络（RNN）训练的影响。使用单位矩阵初始化和ReLU激活函数显著提高了模型的准确性和收敛速度。
+
+\paragraph{\texorpdfstring{\textbf{2.4.4.4} \textbf{门控递归神经网络
+(RNNs) 与长短期记忆
+(LSTM)}}{2.4.4.4 门控递归神经网络 (RNNs) 与长短期记忆 (LSTM)}}\label{2444-ux95e8ux63a7ux9012ux5f52ux795eux7ecfux7f51ux7edc-rnns-ux4e0eux957fux77edux671fux8bb0ux5fc6-lstm}
+
+长短期记忆（Long-Short-Term-Memory, LSTM）
+算法是在1997年由Hochreiter和Schmidhuber提出的。
+
+近些年对门控递归神经网络（gated RNNs）的研究，提出了门控循环单元（Gated
+Recurrent Units, GRU），时间是2014年。
+
+LSTM在很多应用中被证明非常成功，比如无限制的手写识别、语音识别、手写生成、机器翻译、图像标注和解析等。
+
+图中展示了LSTM和GRU的结构，每种结构都有其独特的机制来处理并记忆长时间跨度的数据序列。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps202.jpg}}
+
+\subparagraph{\texorpdfstring{\textbf{2.4.4.4.1} \textbf{长短期记忆网络
+(LSTM)}}{2.4.4.4.1 长短期记忆网络 (LSTM)}}\label{24441-ux957fux77edux671fux8bb0ux5fc6ux7f51ux7edc-lstm}
+
+长短期记忆网络（LSTM）通过几个门控机制来有效地管理和保存信息。以下是LSTM的主要组成部分及其作用：
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps203.jpg}}
+
+遗忘门 (Forget Gate)：控制哪些信息将会被遗忘。
+
+{[}
+
+f\^{}\{(t)\} = \textbackslash sigma(W\^{}f h\^{}\{(t-1)\} + U\^{}f
+x\^{}\{(t)\} + b\^{}f)
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps204.jpg}}
+
+输入门 (Input Gate)：控制哪些新信息将会被写入细胞状态。
+
+{[}
+
+i\^{}\{(t)\} = \textbackslash sigma(W\^{}i h\^{}\{(t-1)\} + U\^{}i
+x\^{}\{(t)\} + b\^{}i)
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps205.jpg}}
+
+输出门 (Output Gate)：控制当前细胞状态的输出。
+
+{[}
+
+o\^{}\{(t)\} = \textbackslash sigma(W\^{}o h\^{}\{(t-1)\} + U\^{}o
+x\^{}\{(t)\} + b\^{}o)
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps206.jpg}}
+
+细胞状态向量 (Cell State Vector)：记忆单元，用于保存重要的信息。
+
+{[}
+
+c\^{}\{(t)\} = f\^{}\{(t)\} \textbackslash odot c\^{}\{(t-1)\} +
+i\^{}\{(t)\} \textbackslash odot \textbackslash tanh(W\^{}c
+h\^{}\{(t-1)\} + U\^{}c x\^{}\{(t)\} + b\^{}c)
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps207.jpg}}
+
+最终的隐藏状态 (Final Hidden State)：基于当前细胞状态的激活值。
+
+{[}
+
+h\^{}\{(t)\} = o\^{}\{(t)\} \textbackslash odot
+\textbackslash tanh(c\^{}\{(t)\})
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps208.jpg}}
+
+图中展示了LSTM的结构，包括输入门、遗忘门、细胞状态、输出门等。通过这些门控机制，LSTM可以在长时间序列数据中有效地保存和提取重要信息，避免梯度消失和梯度爆炸问题。
+
+\textbf{2.4.4.4.1.1} \textbf{LSTM：遗忘门}
+
+遗忘门在长短期记忆网络（LSTM）中起到选择性遗忘信息的作用。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps209.jpg}}
+
+遗忘门会查看前一时刻的隐藏状态 ( h\emph{\{t-1\} ) 和当前输入 ( x\_t
+)，然后为细胞状态 ( C}\{t-1\} ) 中的每个数输出一个在0和1之间的数值。
+
+{[}
+
+f\_t = \textbackslash sigma(W\_f \textbackslash cdot {[}h\_\{t-1\},
+x\_t{]} + b\_f)
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps210.jpg}}
+
+输出的数值为1表示``完全保留这个信息''，为0表示``完全丢弃这个信息''。
+
+通过这样的机制，LSTM可以动态调整细胞状态中的信息，保留对当前任务有用的信息，忘记无用的信息，从而有效地处理长时依赖问题。
+
+\textbf{2.4.4.4.1.2} \textbf{LSTM：输入门}
+
+在长短期记忆网络（LSTM）中，输入门决定了将哪些新的信息存储到细胞状态中。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps211.jpg}}
+
+输入门包含一个sigmoid层，称为``输入门层''，它决定了哪些值需要更新。
+
+{[}
+
+i\_t = \textbackslash sigma(W\_i \textbackslash cdot {[}h\_\{t-1\},
+x\_t{]} + b\_i)
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps212.jpg}}
+
+另一个tanh层用于创建新的候选细胞状态值向量。
+
+{[}
+
+\textbackslash tilde\{C\}\emph{t = \textbackslash tanh(W\_C
+\textbackslash cdot {[}h}\{t-1\}, x\_t{]} + b\_C)
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps213.jpg}}
+
+首先，sigmoid层会生成一个介于0和1之间的值，这些值告诉我们哪些信息是重要的需要更新。然后，tanh层生成新的候选细胞状态值，这些值将被添加到细胞状态中去。
+
+通过这个过程，输入门控制了新信息的引入，有助于模型在处理长时序列时保持更新信息的有效性。
+
+\textbf{2.4.4.4.1.3} \textbf{LSTM: 更新细胞状态}
+
+在长短期记忆网络（LSTM）中，更新细胞状态是一个关键步骤，它结合了遗忘旧信息和添加新信息。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps214.jpg}}
+
+更新过程包括以下步骤：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  使用遗忘门的输出 ( f\_t ) 来乘以旧的细胞状态 ( C\_\{t-1\}
+  )，这会遗忘掉之前选择要丢弃的部分信息。
+\end{enumerate}
+
+{[}
+
+C\_t = f\_t * C\_\{t-1\}
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps215.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  将新的候选细胞状态 ( \textbackslash tilde\{C\}\_t ) 按照输入门的输出 (
+  i\_t )
+  进行缩放，然后将其添加到已经遗忘部分信息的旧细胞状态中，形成新的细胞状态。
+\end{enumerate}
+
+{[}
+
+C\_t = C\_t + i\_t * \textbackslash tilde\{C\}\_t
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps216.jpg}}
+
+通过这些步骤，LSTM单元能够选择性地保留重要信息，并在每个时间步更新细胞状态。这种机制使LSTM在处理长时间序列数据时能够保持有效记忆，不容易出现梯度消失或梯度爆炸问题。
+
+\textbf{2.4.4.4.1.4} \textbf{LSTM：输出门}
+
+在长短期记忆网络（LSTM）中，输出门控制了细胞状态中的哪些信息将作为输出。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps217.jpg}}
+
+具体步骤如下：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  计算输出门的激活值：通过sigmoid层，它决定了细胞状态中哪些部分将输出。
+\end{enumerate}
+
+{[}
+
+o\_t = \textbackslash sigma(W\_o \textbackslash cdot {[}h\_\{t-1\},
+x\_t{]} + b\_o)
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps218.jpg}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  生成最终的隐藏状态：将细胞状态 ( C\_t )
+  通过tanh函数进行非线性变换，然后将结果与输出门的激活值 ( o\_t )
+  相乘，得到最终的隐藏状态 ( h\_t )。
+\end{enumerate}
+
+{[}
+
+h\_t = o\_t \textbackslash cdot \textbackslash tanh(C\_t)
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps219.jpg}}
+
+首先，sigmoid层输出一个介于0和1之间的数值，这些数值决定了细胞状态的哪些部分需要输出。然后，通过tanh函数对细胞状态进行变换，并与sigmoid层的输出结果相乘，得到最终的隐藏状态。
+
+通过这个机制，LSTM能够在每个时间步输出与当前输入和过去状态相关的信息，有效处理长时间序列数据中的长时依赖问题。
+
+\subparagraph{\texorpdfstring{\textbf{2.4.4.4.2} \textbf{门控循环单元
+(GRU,
+2014)}}{2.4.4.4.2 门控循环单元 (GRU, 2014)}}\label{24442-ux95e8ux63a7ux5faaux73afux5355ux5143-gru-2014}
+
+门控循环单元（GRU）是一种简化版的LSTM，包含了两个主要的门：更新门和重置门。
+
+更新门 (Update Gate)：决定了过去的状态信息有多少需要传递到当前状态。
+
+{[}
+
+z\_t = \textbackslash sigma(W\^{}z h\_\{t-1\} + U\^{}z x\_t + b\^{}z)
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps220.jpg}}
+
+重置门 (Reset Gate)：决定了要忘记多少过去的状态信息。
+
+{[}
+
+r\_t = \textbackslash sigma(W\^{}r h\_\{t-1\} + U\^{}r x\_t + b\^{}r)
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps221.jpg}}
+
+新内存内容计算：
+
+{[}
+
+\textbackslash tilde\{h\}\emph{t = \textbackslash tanh(W (r\_t
+\textbackslash odot h}\{t-1\}) + U x\_t + b)
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps222.jpg}}
+
+最终内存/隐藏状态计算：
+
+{[}
+
+h\_t = z\_t \textbackslash odot h\emph{\{t-1\} + (1 z\_t)
+\textbackslash odot \textbackslash tilde\{h\}}t
+
+{]}
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps223.jpg}}
+
+备注：
+
+当重置门 ( r\_t )
+接近0时，GRU会忽略之前的隐藏状态，这允许模型丢弃不相关的信息。
+
+更新门 ( z\_t ) 控制了过去的状态在当前时刻的重要性。
+
+GRU通过这些门控机制，能够有效地处理长时间依赖问题，同时相对于LSTM相对简单，计算效率更高。
+
+\subparagraph{\texorpdfstring{\textbf{2.4.4.4.3} \textbf{LSTM vs
+GRU}}{2.4.4.4.3 LSTM vs GRU}}\label{24443-lstm-vs-gru}
+
+LSTM和GRU是两种常用的递归神经网络（RNN）变体，各自有其优缺点和应用场景。
+
+\#比较
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  性能相似性：
+\end{enumerate}
+
+GRU在多种任务中表现与LSTM相近。
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  训练速度：
+\end{enumerate}
+
+GRU在较少的训练数据上训练速度比LSTM快。
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  长距离关系建模：
+\end{enumerate}
+
+在需要建模长距离关系的任务中，LSTM的表现优于GRU。
+
+\#结构对比
+
+LSTM：
+
+包含三个门：输入门、遗忘门和输出门。
+
+具有细胞状态，用于在多个时间步间记忆信息。
+
+GRU：
+
+包含两个门：重置门和更新门。
+
+状态更新更加简单，没有显式的细胞状态。
+
+如图所示，LSTM具有更复杂的门控机制，使其在处理长距离依赖时具有更强的能力，而GRU则通过简化的结构实现了更快的训练速度和更少的数据需求。
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps224.jpg}}
+
+总结
+
+选择GRU：当数据量较少且需要较快的训练速度时。
+
+选择LSTM：当任务要求对长距离关系有较好建模能力时。
+
+这些特点使得GRU和LSTM在实际应用中各有所长，选择时应根据具体任务需求进行权衡。
+
+\subsubsection{\texorpdfstring{\textbf{2.4.5
+总结}}{2.4.5 总结}}\label{245-ux603bux7ed3}
+
+RNN能够灵活地对序列数据进行建模。
+
+RNN还可以扩展，以建模双向依赖，并与注意力机制结合使用。
+
+LSTM是一种特殊的RNN，可以用于建模长期依赖。
+
+GRU是LSTM的简化版，运行速度更快且需要较少的训练数据。
+
+这些特性使得递归神经网络（RNN）在处理序列数据任务中表现出色，并能够适应不同的要求和场景。LSTM和GRU各自有独特的优势，选择时应依据具体的任务需求进行合理取舍。
+
+\subsection{\texorpdfstring{\textbf{2.5
+总结}}{2.5 总结}}\label{25-ux603bux7ed3}
+
+下面的表格简要总结了不同模型在若干方面的表现：
+
+% \pandocbounded{\includegraphics[keepaspectratio,alt={}]{//Users/djh/Library/Containers/com.kingsoft.wpsoffice.mac/Data/tmp/wps-djh/ksohtml//wps225.jpg}}
+
+{[}
+
+\textbackslash begin\{array\}\{\textbar l\textbar l\textbar l\textbar l\textbar l\textbar l\textbar l\textbar\}
+
+\textbackslash hline
+
+\textbackslash text\{模型\} \& \textbackslash text\{长期依赖\} \&
+\textbackslash text\{并行化\} \& \textbackslash text\{计算\} \&
+\textbackslash text\{长度适应性\} \& \textbackslash text\{梯度流动性\}
+\& \textbackslash text\{复杂性\} \textbackslash{}
+
+\textbackslash hline
+
+\textbackslash text\{RNN\} \& \textbackslash text\{较差，由于递归结构\}
+\& \textbackslash text\{有限，因为是序列处理\} \&
+\textbackslash text\{慢，特别是长序列\} \&
+\textbackslash text\{输入灵活，输出固定\} \&
+\textbackslash text\{存在梯度消失/爆炸问题\} \&
+\textbackslash text\{简单，超参数少\} \textbackslash{}
+
+\textbackslash hline
+
+\textbackslash text\{LSTM\} \&
+\textbackslash text\{更好，但仍有改进空间\} \&
+\textbackslash text\{有限，因为是序列处理\} \&
+\textbackslash text\{慢，特别是长序列\} \&
+\textbackslash text\{输入灵活，输出固定\} \&
+\textbackslash text\{更好的梯度流动，较少消失\} \&
+\textbackslash text\{复杂，超参数多\} \textbackslash{}
+
+\textbackslash hline
+
+\textbackslash text\{CNN\} \& \textbackslash text\{没有内在长依赖\} \&
+\textbackslash text\{高度可并行化\} \&
+\textbackslash text\{快，由于可并行计算\} \&
+\textbackslash text\{灵活性较小，通常需要固定大小输入\} \&
+\textbackslash text\{梯度流动性稳定\} \&
+\textbackslash text\{复杂，超参数多\} \textbackslash{}
+
+\textbackslash hline
+
+\textbackslash text\{Bahdanau Attention\} \&
+\textbackslash text\{与注意力机制配合良好\} \&
+\textbackslash text\{有限，因为是序列处理\} \&
+\textbackslash text\{慢，特别是长序列\} \&
+\textbackslash text\{输入和输出都灵活\} \&
+\textbackslash text\{更好的梯度流动，较少消失\} \&
+\textbackslash text\{简单，超参数少\} \textbackslash{}
+
+\textbackslash hline
+
+\textbackslash text\{Transformer\} \&
+\textbackslash text\{与注意力机制配合良好\} \&
+\textbackslash text\{高度可并行化\} \&
+\textbackslash text\{快，由于可并行计算\} \&
+\textbackslash text\{输入和输出都灵活\} \&
+\textbackslash text\{梯度流动性稳定\} \&
+\textbackslash text\{简单，超参数少\} \textbackslash{}
+
+\textbackslash hline
+
+\textbackslash end\{array\}
+
+{]}
+
+\subsubsection{\texorpdfstring{\textbf{2.5.1
+数据总结}}{2.5.1 数据总结}}\label{251-ux6570ux636eux603bux7ed3}
+
+l
+\textbf{RNN}：擅长处理序列数据，但在处理长距离依赖时表现较差，无法高效并行化，计算速度慢，梯度消失或爆炸问题突出。不过其结构较简单，超参数较少。
+
+l
+\textbf{LSTM}：在处理长期依赖上表现更好，但仍需要改进，并行化能力有限，计算速度较慢。梯度流动性较好，但模型结构复杂，超参数较多。
+
+l
+\textbf{CNN}：不擅长处理长距离依赖，但具有高效的并行化能力和较快的计算速度，通常需要固定大小的输入。梯度流动性稳定，但复杂性较高，超参数较多。
+
+l \textbf{Bahdanau
+Attention}：与注意力机制配合良好，适应性强，但并行化能力有限，计算速度较慢。梯度流动性较好，模型较为简单，超参数较少。
+
+l
+\textbf{Transformer}：与注意力机制配合良好，具有高度的并行化能力和快速计算速度，适应性强，梯度流动性稳定，模型结构较简单，超参数较少。
+
+\subsubsection{\texorpdfstring{\textbf{2.5.2
+选择指南}}{2.5.2 选择指南}}\label{252-ux9009ux62e9ux6307ux5357}
+
+l 当需要处理长距离依赖且并行化要求高时，\textbf{Transformer}是首选。
+
+l \textbf{LSTM}适用于处理长距离依赖，但计算要求并不高的任务。
+
+l \textbf{CNN}适用于图像处理等不需要长距离依赖但需要高并行化的任务。
+
+l \textbf{RNN}和\textbf{Bahdanau
+Attention}适用于序列处理任务，前者简单，后者适应性强。
+
+\section{\texorpdfstring{\textbf{参考文献}}{参考文献}}\label{ux53c2ux8003ux6587ux732e}

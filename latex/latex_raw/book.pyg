@@ -1,0 +1,12 @@
+\begin{table}
+\centering
+\caption{表格排版实例}
+\label{tab1}
+\begin{tabular}{|c|l|r|}
+\hline
+AAA&B&CCC\\
+\hline
+A&BBB&C\\
+\hline
+\end{tabular}
+\end{table}

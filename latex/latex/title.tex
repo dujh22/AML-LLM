@@ -1,37 +1,26 @@
 \begin{titlepage}
-	
-	\centering % Center everything on the title page
-	\scshape % Use small caps for all text on the title page
-	\vspace*{1.5\baselineskip} % White space at the top of the page
-	
-% ===================
-%	Title Section 	
-% ===================
+	\thispagestyle{empty}
+  
+	% 临时把左右边距设为 0，只在本页生效
+	\newgeometry{left=0cm,right=0cm,top=0cm} % 如需顶端也贴边，可加 top=0cm
+  
+	% 让图像占据整页宽度（页面宽度，而不是文本宽度）
+	\noindent\includegraphics[width=\paperwidth]{figures/title/fig1.png}
+  
+	%--- 标题 -----------------------------------------------------------
+	{\bfseries\zihao{1}
+		\begin{flushleft}
+			\hspace{1cm} 高级机器学习之\textcolor{RoyalBlue}{大语言模型}\par
+			\vspace{0.5cm}
+		\end{flushleft}
+	}
+  
+	%--- 作者与单位 -----------------------------------------------------
+	\begin{flushleft}
+		\vspace{0.5cm}
+		{\Large \hspace{1cm} \textit{by}\; 唐杰、杜晋华等 \par}
+		\vspace{0.5cm}
+		{\large \hspace{1cm} 清华大学（Tsinghua University）\par}
+	\end{flushleft}
 
-	\rule{13cm}{1.6pt}\vspace*{-\baselineskip}\vspace*{2pt} % Thick horizontal rule
-	\rule{13cm}{0.4pt} % Thin horizontal rule
-	
-		\vspace{0.75\baselineskip} % Whitespace above the title
-% ========== Title ===============	
-	{	
-        \Huge AML\\ 
-			\vspace{4mm}
-		高级机器学习之大语言模型 \\	
-    }
-% ======================================
-		\vspace{0.75\baselineskip} % Whitespace below the title
-	\rule{13cm}{0.4pt}\vspace*{-\baselineskip}\vspace{3.2pt} % Thin horizontal rule
-	\rule{13cm}{1.6pt} % Thick horizontal rule
-	
-		\vspace{1.75\baselineskip} % Whitespace after the title block
-% =================
-%	Information	
-% =================
-	{\large 作者: 唐杰、杜晋华等 \\
-		\vspace*{1.2\baselineskip}
-	Tsinghua University} \\
-	\vfill
-如果你有任何问题或评论, \\ \vspace{1mm} 可以通过邮件 \url{dujh22@mails.tsinghua.edu.cn} 联系我\\ \vspace{1mm}
-Happy Reading!
-
-\end{titlepage}
+  \end{titlepage}

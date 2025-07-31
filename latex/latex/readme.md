@@ -8,12 +8,20 @@
 
 安装[minted](https://ctan.org/pkg/minted?lang=en)包。
 
+pip install Pygments
+
 然后执行如下命令。
 
 ```shell
 git clone git@github.com:NelsonCheung-cn/latex-book-template.git
 cd latex-book-template
 xelatex -shell-escape book.tex
+xelatex -shell-escape book.tex
+
+如果存在各个章节的参考文献，则变化为
+xelatex -shell-escape book.tex
+bibtex chapter1.aux
+// 将生成的chapter_1.bbl文件手动重命名为chapter_1.tex.bbl
 xelatex -shell-escape book.tex
 ```
 
@@ -22,10 +30,6 @@ xelatex -shell-escape book.tex
 或者直接将项目上传至overleaf，然后将compiler更换成XeLaTeX即可编译。
 
 部分效果如下(github的内嵌pdf显示器可能无法显示中文......)。
-
-![](gallery/1-1.png)
-
-![](gallery/1-2.png)
 
 # Introduction
 
@@ -76,10 +80,12 @@ xelatex -shell-escape book.tex
 + `chapter_X.tex`：第X章的内容。
 + `attachment.tex`：附录。
 
-本模板的文案选自成都理工提供的LaTeX模板，生成的 `book.pdf`中的某些细节可能和模板的实际代码有所出入，详情以源码为准。
 
-# References
+# 工具
 
-1. 成都理工学院实验报告模板 [[DOWNLOAD](http://static.latexstudio.net/article/2019/0324/CDUT_Lab_report.rar)]
-2. Elegantbook [[GITHUB](https://github.com/ElegantLaTeX/ElegantBook)]
-3. Book Class: Instructor's Guide [[LINK](https://tex.stackexchange.com/questions/159746/book-class-instructors-guide)]
+您可以通过将Word文档另存为网页格式来快速导出所有图片。导出步骤：
+
+1. **打开Word文档** ：首先，打开您想要导出图片的Word文档。
+2. [ **另存为网页格式** **：点击菜单栏中的“文件”，然后选择“另存为”。在弹出的对话框中，选择保存路径，并在“保存类型”下拉菜单中选择“网页（** *.htm;* **.html）”选项。点击“保存”按钮。** ](https://jingyan.baidu.com/article/63acb44aaa49fa21fcc17eab.html)
+3. [ **确认保存** **：如果弹出警告框，选择“继续”以确认保存操作。此时，Word会生成一个网页文件和一个与之同名的文件夹。** ](https://jingyan.baidu.com/article/3f16e003fc537c2590c1036b.html)
+4. [ **查找导出的图片** **：打开刚才保存的文件夹，您会看到一个名为“XXX.files”的文件夹（其中XXX为您的Word文档名）。双击进入该文件夹，您将看到文档中所有的图片。** ](https://zhuanlan.zhihu.com/p/112342316)

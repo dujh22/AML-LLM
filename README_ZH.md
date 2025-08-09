@@ -139,14 +139,14 @@ xelatex -shell-escape book.tex
 ## **📧 联系作者**
 
 * **唐杰** - 清华大学
-* **杜晋华** - 清华大学
+* **杜晋华** - 清华大学 dujh22@mails.tsinghua.edu.cn
 
 ---
 
 ## **🔗 相关链接**
 
 * [清华大学主页](https://www.tsinghua.edu.cn/)
-* [GitHub项目页面](https://github.com/yourusername/AML-LLM)
+* [GitHub项目页面](https://github.com/dujh22/AML-LLM)
 
 ---
 
